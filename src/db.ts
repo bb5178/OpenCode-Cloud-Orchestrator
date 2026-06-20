@@ -48,7 +48,7 @@ export async function updateJobStatus(
 
 export async function listJobs(db: D1Database, limit = 50): Promise<Job[]> {
   const result = await db
-    .prepare("SELECT * FROM jobs ORDER BY created_at DESC LIMIT ?")
+    .prepare("SELECT * FROM jobs WHERE id NOT LIKE 'plan-%' ORDER BY created_at DESC LIMIT ?")
     .bind(limit)
     .all<Job>();
   return result.results;

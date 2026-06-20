@@ -729,6 +729,8 @@ export function renderDashboard(): string {
       currentPlan = null;
     }
 
+    let planPollTimer = null;
+
     async function planNewJob() {
       const prompt = document.getElementById('jobPrompt').value.trim();
       if (!prompt) { alert('Enter a prompt first'); return; }
@@ -736,14 +738,18 @@ export function renderDashboard(): string {
       const model = document.getElementById('jobModel').value;
       const preview = document.getElementById('planPreview');
 
-      // Disable all footer buttons during planning
+      // Stop any existing plan polling
+      if (planPollTimer) { clearInterval(planPollTimer); planPollTimer = null; }
+
+      // Disable footer during planning
       document.getElementById('modalFooter').innerHTML =
-        '<button class="btn-lg" disabled>Cancel</button>'
+        '<button class="btn-lg" onclick="cancelPlan()">Cancel</button>'
         + '<button class="btn-lg btn-lg-primary" disabled><span class="spinner"></span> Planning...</button>';
 
-      preview.innerHTML = '<div class="plan-loading"><span class="spinner"></span> Decomposing prompt into tasks using AI...</div>';
+      preview.innerHTML = '<div class="plan-loading"><span class="spinner"></span> Plan task queued — waiting for runner to execute with full local context...</div>';
 
       try {
+        // Submit plan request — this creates a plan task for the runner
         const res = await fetch('/api/plan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -759,39 +765,85 @@ export function renderDashboard(): string {
           return;
         }
 
-        currentPlan = data;
+        // Poll for plan completion
+        const planId = data.planId;
+        preview.innerHTML = '<div class="plan-loading"><span class="spinner"></span> Runner is decomposing your prompt with full project context...<br><span style="font-size:11px;color:var(--muted)">Plan ID: ' + planId + '</span></div>';
 
-        // Render plan preview
-        let html = '<div class="plan-preview">';
-        html += '<div class="plan-info">' + data.tasks.length + ' tasks planned &bull; '
-          + 'Rollup: ' + esc(data.rollup?.strategy || 'summary') + '</div>';
+        planPollTimer = setInterval(async () => {
+          try {
+            const pollRes = await fetch('/api/plan/' + planId);
+            const pollData = await pollRes.json();
 
-        for (const t of data.tasks) {
-          const deps = (t.dependencies || []);
-          const depsHtml = deps.length > 0
-            ? '<div class="plan-task-deps">' + deps.map(d => '<span class="dep-tag">' + esc(d) + '</span>').join('') + '</div>'
-            : '';
-          html += '<div class="plan-task">'
-            + '<div class="plan-task-header"><span class="plan-task-id">' + esc(t.id) + '</span></div>'
-            + '<div class="plan-task-prompt">' + esc(t.prompt) + '</div>'
-            + depsHtml
-            + '</div>';
-        }
-        html += '</div>';
-        preview.innerHTML = html;
-
-        // Update footer with Re-plan and Start buttons
-        document.getElementById('modalFooter').innerHTML =
-          '<button class="btn-lg" onclick="closeModal()">Cancel</button>'
-          + '<button class="btn-lg" onclick="planNewJob()">Re-plan</button>'
-          + '<button class="btn-lg btn-lg-green" onclick="submitPlannedJob()">Start Job</button>';
+            if (pollData.status === 'completed' && pollData.tasks) {
+              // Plan is ready
+              clearInterval(planPollTimer);
+              planPollTimer = null;
+              showPlanResult(pollData);
+            } else if (pollData.status === 'completed' && pollData.error) {
+              // Plan completed but parsing failed
+              clearInterval(planPollTimer);
+              planPollTimer = null;
+              preview.innerHTML = '<div style="color:var(--red);padding:12px">Plan parsing failed: ' + esc(pollData.error) + '</div>'
+                + (pollData.raw ? '<pre style="font-size:11px;color:var(--muted);max-height:200px;overflow:auto;margin-top:8px">' + esc(pollData.raw) + '</pre>' : '');
+              document.getElementById('modalFooter').innerHTML =
+                '<button class="btn-lg" onclick="closeModal()">Cancel</button>'
+                + '<button class="btn-lg btn-lg-primary" onclick="planNewJob()">Retry Plan</button>';
+            } else if (pollData.status === 'failed') {
+              clearInterval(planPollTimer);
+              planPollTimer = null;
+              preview.innerHTML = '<div style="color:var(--red);padding:12px">Plan task failed. Check if the runner is running.</div>';
+              document.getElementById('modalFooter').innerHTML =
+                '<button class="btn-lg" onclick="closeModal()">Cancel</button>'
+                + '<button class="btn-lg btn-lg-primary" onclick="planNewJob()">Retry Plan</button>';
+            } else {
+              // Still running — update progress
+              const prog = pollData.progress ? '<br><span style="color:var(--yellow);font-style:italic">' + esc(pollData.progress) + '</span>' : '';
+              preview.innerHTML = '<div class="plan-loading"><span class="spinner"></span> Runner is decomposing your prompt with full project context...' + prog + '<br><span style="font-size:11px;color:var(--muted)">Status: ' + pollData.status + '</span></div>';
+            }
+          } catch (e) {
+            // Network error during poll — keep trying
+          }
+        }, 3000);
 
       } catch (err) {
-        preview.innerHTML = '<div style="color:var(--red);padding:12px">Planning failed: ' + esc(err.message) + '</div>';
+        preview.innerHTML = '<div style="color:var(--red);padding:12px">Failed to submit plan: ' + esc(err.message) + '</div>';
         document.getElementById('modalFooter').innerHTML =
           '<button class="btn-lg" onclick="closeModal()">Cancel</button>'
           + '<button class="btn-lg btn-lg-primary" onclick="planNewJob()">Retry Plan</button>';
       }
+    }
+
+    function cancelPlan() {
+      if (planPollTimer) { clearInterval(planPollTimer); planPollTimer = null; }
+      closeModal();
+    }
+
+    function showPlanResult(data) {
+      const preview = document.getElementById('planPreview');
+      currentPlan = data;
+
+      let html = '<div class="plan-preview">';
+      html += '<div class="plan-info">' + data.tasks.length + ' tasks planned &bull; '
+        + 'Rollup: ' + esc(data.rollup?.strategy || 'summary') + '</div>';
+
+      for (const t of data.tasks) {
+        const deps = (t.dependencies || []);
+        const depsHtml = deps.length > 0
+          ? '<div class="plan-task-deps">' + deps.map(d => '<span class="dep-tag">' + esc(d) + '</span>').join('') + '</div>'
+          : '';
+        html += '<div class="plan-task">'
+          + '<div class="plan-task-header"><span class="plan-task-id">' + esc(t.id) + '</span></div>'
+          + '<div class="plan-task-prompt">' + esc(t.prompt) + '</div>'
+          + depsHtml
+          + '</div>';
+      }
+      html += '</div>';
+      preview.innerHTML = html;
+
+      document.getElementById('modalFooter').innerHTML =
+        '<button class="btn-lg" onclick="closeModal()">Cancel</button>'
+        + '<button class="btn-lg" onclick="planNewJob()">Re-plan</button>'
+        + '<button class="btn-lg btn-lg-green" onclick="submitPlannedJob()">Start Job</button>';
     }
 
     async function submitPlannedJob() {

@@ -98,6 +98,12 @@ export default {
         return await handleComplete(env, body, corsHeaders);
       }
 
+      // ── GET /api/plan/:id — Check plan status and get parsed tasks ──
+      const planMatch = path.match(/^\/api\/plan\/([a-zA-Z0-9_-]+)$/);
+      if (planMatch && request.method === "GET") {
+        return await handleGetPlan(env, planMatch[1], corsHeaders);
+      }
+
       // ── POST /api/watchdog ──
       if (path === "/api/watchdog" && request.method === "POST") {
         return await handleWatchdog(env, corsHeaders);
@@ -144,17 +150,36 @@ async function handlePlanJob(
     return json({ error: "Prompt is required" }, 400, headers);
   }
 
-  try {
-    const plan = await planJob(env.AI, body.prompt);
-    return json({
-      prompt: body.prompt,
-      model: body.model || "anthropic/claude-opus-4-6",
-      tasks: plan.tasks,
-      rollup: plan.rollup,
-    }, 200, headers);
-  } catch (err) {
-    return json({ error: `Planning failed: ${err}` }, 500, headers);
-  }
+  const planId = `plan-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const model = body.model || "anthropic/claude-opus-4-6";
+
+  // Create a plan job — a single task that runs locally via the runner
+  // with full OpenCode context (AGENTS.md, codebase, tools)
+  const planPrompt = `You are a task planner. Given the following user request, decompose it into discrete, executable tasks with dependencies.
+
+USER REQUEST:
+"${body.prompt}"
+
+Rules:
+1. Each task should be self-contained — an AI agent can complete it independently.
+2. Use clear, descriptive task IDs (lowercase, hyphens). E.g. "research-auth", "write-tests".
+3. Define dependencies — a task only starts after its dependencies complete. Results from dependencies are automatically passed as context.
+4. Maximize parallelism — independent tasks should have no dependency relationship.
+5. Typically 3-20 tasks depending on complexity.
+6. Each task prompt should be detailed and unambiguous.
+7. Consider the local codebase, project structure, and available tools when planning.
+
+Respond with ONLY valid JSON (no markdown fences, no explanation):
+{"tasks":[{"id":"task-id","prompt":"Detailed instruction","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine results"}}`;
+
+  // Create a lightweight plan job in D1
+  await db.createJob(env.DB, planId, body.prompt, "summary", null, "", model, "planning");
+  await db.createTask(env.DB, `${planId}/_plan`, planId, planPrompt, 0, [], model);
+  await db.queueTasks(env.DB, [`${planId}/_plan`]);
+  await env.TASK_QUEUE.put(`queued:${planId}/_plan`, `${planId}/_plan`);
+  await db.logEvent(env.DB, planId, null, "plan_created", `Planning job created for: ${body.prompt.slice(0, 100)}`);
+
+  return json({ planId, status: "planning", message: "Plan task queued for runner execution" }, 202, headers);
 }
 
 async function handleSubmitJob(
@@ -220,9 +245,9 @@ async function handlePoll(
     return json({ task: null }, 200, headers);
   }
 
-  // Check job is still running (not paused/stopped)
+  // Check job is still running or planning (not paused/stopped)
   const job = await db.getJob(env.DB, task.job_id);
-  if (!job || job.status !== "running") {
+  if (!job || !["running", "planning"].includes(job.status)) {
     return json({ task: null }, 200, headers);
   }
 
@@ -432,6 +457,76 @@ async function handleJobAction(
 
     default:
       return json({ error: `Unknown action: ${body.action}` }, 400, headers);
+  }
+}
+
+async function handleGetPlan(
+  env: Env,
+  planId: string,
+  headers: Record<string, string>
+): Promise<Response> {
+  const job = await db.getJob(env.DB, planId);
+  if (!job) {
+    return json({ error: "Plan not found" }, 404, headers);
+  }
+
+  const tasks = await db.getTasksByJob(env.DB, planId);
+  const planTask = tasks.find((t) => t.id.endsWith("/_plan"));
+
+  if (!planTask) {
+    return json({ error: "Plan task not found" }, 404, headers);
+  }
+
+  // Still running?
+  if (planTask.status !== "completed") {
+    return json({
+      planId,
+      status: planTask.status,
+      progress: planTask.progress,
+      tasks: null,
+    }, 200, headers);
+  }
+
+  // Parse the plan result into structured tasks
+  const raw = planTask.result || "";
+  try {
+    // Extract JSON from the result (may have surrounding text)
+    let jsonStr = raw.trim();
+    const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) jsonStr = jsonMatch[1].trim();
+    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objMatch) jsonStr = objMatch[0];
+
+    const parsed = JSON.parse(jsonStr);
+    const plannedTasks = (parsed.tasks || []).map((t: any, i: number) => ({
+      id: t.id || `task-${i + 1}`,
+      prompt: t.prompt || "",
+      dependencies: Array.isArray(t.dependencies) ? t.dependencies : [],
+    }));
+
+    const rollup = parsed.rollup || {
+      strategy: "summary",
+      instruction: "Summarize the results of all completed tasks.",
+    };
+
+    // Clean up the plan job (it served its purpose)
+    await db.deleteJob(env.DB, planId);
+
+    return json({
+      planId,
+      status: "completed",
+      prompt: job.original_prompt,
+      model: job.model,
+      tasks: plannedTasks,
+      rollup,
+    }, 200, headers);
+  } catch (err) {
+    return json({
+      planId,
+      status: "completed",
+      error: `Failed to parse plan output: ${err}`,
+      raw: raw.slice(0, 2000),
+    }, 200, headers);
   }
 }
 
