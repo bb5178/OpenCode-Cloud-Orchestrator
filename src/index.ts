@@ -169,11 +169,14 @@ PLANNING RULES:
 6. Each task prompt must be detailed and specific enough for an AI agent to execute without ambiguity.
 7. Consider the local project context when planning — what files exist, what tools are available.
 
-YOUR OUTPUT MUST BE EXACTLY ONE JSON OBJECT — nothing else. No explanation before or after. No markdown fences. No commentary. Just the raw JSON:
+CRITICAL CONSTRAINTS:
+- DO NOT call oco_submit_job or any OCO tools. You are ONLY planning, not executing.
+- DO NOT actually execute the tasks yourself. Just plan them.
+- DO NOT use any tools except for reading files or searching if needed for context.
+- Your FINAL output must be ONLY a JSON object. No explanation, no markdown fences, no commentary.
+- Format: {"tasks":[{"id":"task-id","prompt":"Detailed instruction","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine results"}}
 
-{"tasks":[{"id":"example-task","prompt":"Detailed instruction for this task","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine the results of all tasks into a final output"}}
-
-CRITICAL: Your entire response must be parseable as JSON. Do not write anything before or after the JSON object.`;
+After you have gathered enough context to plan well, output ONLY the JSON object as your final response.`;
 
   // Create a lightweight plan job in D1
   await db.createJob(env.DB, planId, body.prompt, "summary", null, "", model, "planning");
