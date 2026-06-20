@@ -26,6 +26,8 @@ const POOL_SIZE = parseInt(getArg("--pool") || "4", 10);
 const POLL_INTERVAL = 3000;
 const BASE_PORT = 14100;
 const SERVER_WARMUP_MS = 8000;
+const WATCHDOG_INTERVAL = 60000;    // check every 60 seconds
+const HUNG_THRESHOLD_MS = 120000;   // 2 minutes no activity = hung
 
 function getArg(name) {
   const idx = args.indexOf(name);
@@ -146,8 +148,10 @@ async function executeTask(server, task) {
   server.status = "running";
   server.taskId = task.id;
   server.taskPrompt = task.prompt;
+  server.taskStartedAt = Date.now();
   server.lastActivity = Date.now();
   server.output = "";
+  server._childProcess = null;
 
   // Build prompt with context
   let prompt = task.prompt;
@@ -175,6 +179,8 @@ async function executeTask(server, task) {
         stdio: ["ignore", "pipe", "pipe"],
         env: { ...process.env },
       });
+
+      server._childProcess = child;
 
       let stdout = "";
       let stderr = "";
@@ -211,8 +217,46 @@ async function executeTask(server, task) {
     server.status = "idle";
     server.taskId = null;
     server.taskPrompt = null;
+    server.taskStartedAt = null;
+    server._childProcess = null;
     server.lastActivity = Date.now();
   }
+}
+
+// ── Watchdog ──
+
+let watchdogKills = 0;
+
+function runWatchdog() {
+  const now = Date.now();
+  for (const srv of servers) {
+    if (srv.status !== "running") continue;
+
+    const silentMs = now - srv.lastActivity;
+    const stats = procStats[srv.pid] || { cpu: 0 };
+
+    // Hung detection: running, low CPU, no IO, silent for threshold
+    if (silentMs > HUNG_THRESHOLD_MS && stats.cpu < 1.0 && (srv._ioRate || 0) === 0) {
+      const taskId = srv.taskId || "unknown";
+      const taskShort = taskId.split("/").pop();
+
+      // Kill the child process
+      if (srv._childProcess) {
+        try {
+          srv._childProcess.kill("SIGTERM");
+          watchdogKills++;
+          // Log to server output so TUI shows what happened
+          srv.output += `\n[WATCHDOG] Killed hung task ${taskShort} after ${Math.floor(silentMs / 1000)}s of inactivity`;
+        } catch {}
+      }
+
+      // Also notify OCO server
+      updateStatus(taskId, "failed", `Watchdog killed: no activity for ${Math.floor(silentMs / 1000)}s`).catch(() => {});
+    }
+  }
+
+  // Also trigger server-side watchdog for tasks claimed by other runners
+  ocoFetch("/api/watchdog", { method: "POST" }).catch(() => {});
 }
 
 // ── Process Stats ──
@@ -298,7 +342,8 @@ function renderHeader() {
 
   // Title bar
   const title = ` OCO Pool Runner `;
-  const stats = ` ${now}  Up: ${uptime}  Done: ${totalCompleted}  Failed: ${totalFailed} `;
+  const wdStr = watchdogKills > 0 ? `  WD: ${watchdogKills}` : "";
+  const stats = ` ${now}  Up: ${uptime}  Done: ${totalCompleted}  Failed: ${totalFailed}${wdStr} `;
   const pad = w - title.length - stats.length;
   process.stdout.write(
     `${C.bgBlue}${C.white}${C.bold}${title}${" ".repeat(Math.max(0, pad))}${stats}${C.reset}\n`
@@ -398,7 +443,7 @@ function renderServers() {
 }
 
 function renderFooter() {
-  process.stdout.write(`${C.dim} Ctrl+C to stop  │  Polling every ${POLL_INTERVAL / 1000}s  │  Client: ${CLIENT_ID}${C.reset}\n`);
+  process.stdout.write(`${C.dim} Ctrl+C to stop  │  Poll: ${POLL_INTERVAL / 1000}s  │  Watchdog: ${WATCHDOG_INTERVAL / 1000}s (kills hung >${HUNG_THRESHOLD_MS / 1000}s)  │  ${CLIENT_ID}${C.reset}\n`);
 }
 
 function pad(s, len) {
@@ -434,6 +479,9 @@ async function main() {
 
   // Render loop
   const renderTimer = setInterval(render, 500);
+
+  // Watchdog loop — auto-kills hung tasks
+  const watchdogTimer = setInterval(runWatchdog, WATCHDOG_INTERVAL);
 
   // Wait for servers to warm up
   await sleep(SERVER_WARMUP_MS + 1000);
@@ -473,6 +521,7 @@ async function main() {
   }
 
   clearInterval(renderTimer);
+  clearInterval(watchdogTimer);
 }
 
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
