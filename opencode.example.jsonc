@@ -1,0 +1,15 @@
+// Add this entry to your ~/.config/opencode/opencode.jsonc under the "mcp" key
+// to enable OCO tools inside OpenCode sessions.
+{
+  "oco": {
+    "type": "local",
+    "command": ["node", "/path/to/oco/mcp-server/index.mjs"],
+    "enabled": true,
+    "env": {
+      "OCO_URL": "https://oco.yourdomain.com",
+      "OCO_API_TOKEN": "your_oco_api_token",
+      "OCO_ACCESS_CLIENT_ID": "your_access_client_id.access",
+      "OCO_ACCESS_CLIENT_SECRET": "your_access_client_secret"
+    }
+  }
+}

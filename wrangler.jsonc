@@ -1,0 +1,49 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oco",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-20",
+  "observability": {
+    "enabled": true
+  },
+
+  // Custom domain — update with your domain
+  "routes": [
+    {
+      "pattern": "oco.yourdomain.com/*",
+      "zone_name": "yourdomain.com"
+    }
+  ],
+  "workers_dev": false,
+
+  // Workflows binding
+  "workflows": [
+    {
+      "name": "oco-job",
+      "binding": "OCO_WORKFLOW",
+      "class_name": "OcoJobWorkflow"
+    }
+  ],
+
+  // D1 database — run: npx wrangler d1 create oco-db
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oco-db",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ],
+
+  // KV namespace — run: npx wrangler kv namespace create TASK_QUEUE
+  "kv_namespaces": [
+    {
+      "binding": "TASK_QUEUE",
+      "id": "YOUR_KV_NAMESPACE_ID"
+    }
+  ],
+
+  // Workers AI for prompt decomposition
+  "ai": {
+    "binding": "AI"
+  }
+}

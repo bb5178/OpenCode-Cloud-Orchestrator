@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+*.log
+
+# Local runner config with secrets
+run.sh
+
+# Lock files (let users generate their own)
+package-lock.json
+mcp-server/package-lock.json
