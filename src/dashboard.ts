@@ -553,7 +553,10 @@ export function renderDashboard(): string {
         }
         if (['completed','failed','stopped'].includes(j.status)) {
           actions += '<button class="btn btn-primary" onclick="jobAction(\\'' + j.id + '\\',\\'restart\\',event)">Restart</button>';
-          actions += '<button class="btn" onclick="jobAction(\\'' + j.id + '\\',\\'retry_stalled\\',event)">Retry Failed</button>';
+        }
+        // Show Retry Failed if there are any failed/stalled tasks, regardless of job status
+        if (cFailed > 0) {
+          actions += '<button class="btn" onclick="jobAction(\\'' + j.id + '\\',\\'retry_stalled\\',event)">Retry Failed (' + cFailed + ')</button>';
         }
         actions += '<button class="btn btn-danger" onclick="jobAction(\\'' + j.id + '\\',\\'delete\\',event)">Delete</button>';
 
