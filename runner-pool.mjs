@@ -28,6 +28,7 @@ const BASE_PORT = 14100;
 const SERVER_WARMUP_MS = 8000;
 const WATCHDOG_INTERVAL = 60000;    // check every 60 seconds
 const HUNG_THRESHOLD_MS = 120000;   // 2 minutes no activity = hung
+const TASK_TIMEOUT_MS = parseInt(getArg("--timeout") || "300000", 10);  // 5 minutes default per task
 
 function getArg(name) {
   const idx = args.indexOf(name);
@@ -181,9 +182,25 @@ async function executeTask(server, task) {
       });
 
       server._childProcess = child;
+      let settled = false;
 
       let stdout = "";
       let stderr = "";
+
+      // Task-level timeout — kills the process if it runs too long
+      const timeoutTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          child.kill("SIGTERM");
+          // Give partial result if we have output
+          const partial = stdout.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
+          if (partial.length > 100) {
+            resolve(partial + "\n\n[TIMEOUT: Task exceeded " + (TASK_TIMEOUT_MS / 1000) + "s limit. Partial result returned.]");
+          } else {
+            reject(new Error(`Task timeout after ${TASK_TIMEOUT_MS / 1000}s`));
+          }
+        }
+      }, TASK_TIMEOUT_MS);
 
       child.stdout.on("data", (d) => {
         const chunk = d.toString();
@@ -195,6 +212,9 @@ async function executeTask(server, task) {
       child.stderr.on("data", (d) => { stderr += d.toString(); server._bytesTotal = (server._bytesTotal || 0) + d.length; server.lastActivity = Date.now(); });
 
       child.on("close", (code) => {
+        clearTimeout(timeoutTimer);
+        if (settled) return;
+        settled = true;
         if (code === 0) {
           const clean = stdout.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
           const lines = clean.split("\n").filter((l) => l.trim().length > 0);
@@ -204,7 +224,10 @@ async function executeTask(server, task) {
         }
       });
 
-      child.on("error", (err) => reject(err));
+      child.on("error", (err) => {
+        clearTimeout(timeoutTimer);
+        if (!settled) { settled = true; reject(err); }
+      });
     });
 
     await completeTask(task.id, result);
@@ -443,7 +466,7 @@ function renderServers() {
 }
 
 function renderFooter() {
-  process.stdout.write(`${C.dim} Ctrl+C to stop  │  Poll: ${POLL_INTERVAL / 1000}s  │  Watchdog: ${WATCHDOG_INTERVAL / 1000}s (kills hung >${HUNG_THRESHOLD_MS / 1000}s)  │  ${CLIENT_ID}${C.reset}\n`);
+  process.stdout.write(`${C.dim} Ctrl+C to stop  │  Poll: ${POLL_INTERVAL / 1000}s  │  Timeout: ${TASK_TIMEOUT_MS / 1000}s  │  Watchdog: ${WATCHDOG_INTERVAL / 1000}s (hung >${HUNG_THRESHOLD_MS / 1000}s)  │  ${CLIENT_ID}${C.reset}\n`);
 }
 
 function pad(s, len) {
