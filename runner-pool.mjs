@@ -10,7 +10,7 @@
 //
 // Requires: OCO_URL, OCO_API_TOKEN, OCO_ACCESS_CLIENT_ID, OCO_ACCESS_CLIENT_SECRET
 
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 import { hostname } from "node:os";
 
 // ── Config ──
@@ -101,8 +101,8 @@ function startServer(id) {
   srv.pid = proc.pid;
   srv.process = proc;
 
-  proc.stdout.on("data", (d) => { srv.output += d.toString(); srv.lastActivity = Date.now(); });
-  proc.stderr.on("data", (d) => { srv.output += d.toString(); srv.lastActivity = Date.now(); });
+  proc.stdout.on("data", (d) => { srv.output += d.toString(); srv._bytesTotal = (srv._bytesTotal || 0) + d.length; srv.lastActivity = Date.now(); });
+  proc.stderr.on("data", (d) => { srv.output += d.toString(); srv._bytesTotal = (srv._bytesTotal || 0) + d.length; srv.lastActivity = Date.now(); });
 
   proc.on("close", (code) => {
     if (!shuttingDown) {
@@ -183,9 +183,10 @@ async function executeTask(server, task) {
         const chunk = d.toString();
         stdout += chunk;
         server.output = stdout.slice(-2000);
+        server._bytesTotal = (server._bytesTotal || 0) + d.length;
         server.lastActivity = Date.now();
       });
-      child.stderr.on("data", (d) => { stderr += d.toString(); server.lastActivity = Date.now(); });
+      child.stderr.on("data", (d) => { stderr += d.toString(); server._bytesTotal = (server._bytesTotal || 0) + d.length; server.lastActivity = Date.now(); });
 
       child.on("close", (code) => {
         if (code === 0) {
@@ -212,6 +213,57 @@ async function executeTask(server, task) {
     server.taskPrompt = null;
     server.lastActivity = Date.now();
   }
+}
+
+// ── Process Stats ──
+
+const procStats = {};  // pid -> { cpu, mem, rss, vsz, bytesOut }
+
+function collectStats() {
+  // Collect stats for all server PIDs in one ps call
+  const pids = servers.map((s) => s.pid).filter(Boolean);
+  if (pids.length === 0) return;
+
+  try {
+    // ps returns: PID %CPU %MEM RSS (in KB)
+    const out = execSync(
+      `ps -o pid=,pcpu=,pmem=,rss= -p ${pids.join(",")}`,
+      { encoding: "utf8", timeout: 2000 }
+    ).trim();
+
+    for (const line of out.split("\n")) {
+      const parts = line.trim().split(/\s+/);
+      if (parts.length >= 4) {
+        const pid = parseInt(parts[0]);
+        procStats[pid] = {
+          cpu: parseFloat(parts[1]) || 0,
+          mem: parseFloat(parts[2]) || 0,
+          rss: parseInt(parts[3]) || 0,  // KB
+        };
+      }
+    }
+  } catch {
+    // ps failed — stale stats are fine
+  }
+
+  // Track output bytes per server as IO indicator
+  for (const srv of servers) {
+    if (!srv._bytesTotal) srv._bytesTotal = 0;
+    if (!srv._lastBytes) srv._lastBytes = 0;
+    srv._ioRate = srv._bytesTotal - srv._lastBytes;  // bytes since last collect
+    srv._lastBytes = srv._bytesTotal;
+  }
+}
+
+function formatBytes(kb) {
+  if (kb < 1024) return `${kb}K`;
+  return `${(kb / 1024).toFixed(0)}M`;
+}
+
+function formatIORate(bytes) {
+  if (bytes <= 0) return "0";
+  if (bytes < 1024) return `${bytes}B/s`;
+  return `${(bytes / 1024).toFixed(0)}K/s`;
 }
 
 // ── TUI Rendering ──
@@ -263,7 +315,7 @@ function renderServers() {
   const now = Date.now();
 
   // Column headers
-  const hdr = ` ${pad("ID", 4)}${pad("PORT", 7)}${pad("STATUS", 12)}${pad("PID", 8)}${pad("TASKS", 7)}${pad("ELAPSED", 10)}${pad("TASK / OUTPUT", w - 52)} `;
+  const hdr = ` ${pad("ID", 4)}${pad("PORT", 7)}${pad("STATUS", 10)}${pad("PID", 8)}${pad("CPU%", 6)}${pad("MEM", 7)}${pad("IO", 8)}${pad("DONE", 6)}${pad("TIME", 9)}${pad("TASK / OUTPUT", w - 69)} `;
   process.stdout.write(`${C.gray}${C.bold}${hdr}${C.reset}\n`);
 
   for (const srv of servers) {
@@ -271,6 +323,18 @@ function renderServers() {
     let statusText = srv.status;
     let elapsed = "";
     let detail = "";
+
+    // Get process stats
+    const stats = procStats[srv.pid] || { cpu: 0, mem: 0, rss: 0 };
+    const cpuStr = srv.pid ? stats.cpu.toFixed(1) : "-";
+    const memStr = srv.pid ? formatBytes(stats.rss) : "-";
+    const ioStr = formatIORate(srv._ioRate || 0);
+
+    // Color CPU based on usage
+    let cpuColor = C.dim;
+    if (stats.cpu > 50) cpuColor = C.green;
+    else if (stats.cpu > 10) cpuColor = C.yellow;
+    else if (srv.status === "running" && stats.cpu < 1) cpuColor = C.red;  // suspicious — might be hung
 
     switch (srv.status) {
       case "starting":
@@ -291,6 +355,13 @@ function renderServers() {
         statusColor = C.green;
         statusText = "RUNNING";
         elapsed = formatDuration(now - srv.lastActivity);
+        // Detect possible hang: running but no CPU and no IO for 60s+
+        const silentMs = now - srv.lastActivity;
+        const maybeHung = stats.cpu < 0.5 && (srv._ioRate || 0) === 0 && silentMs > 60000;
+        if (maybeHung) {
+          statusColor = C.red;
+          statusText = "HUNG?";
+        }
         // Show task ID and last output line
         const taskShort = (srv.taskId || "").split("/").pop() || "";
         const lastLine = (srv.output || "")
@@ -298,7 +369,7 @@ function renderServers() {
           .split("\n")
           .filter((l) => l.trim())
           .pop() || "";
-        detail = `${C.white}${taskShort}${C.reset} ${C.dim}${truncate(lastLine, w - 72)}${C.reset}`;
+        detail = `${C.white}${taskShort}${C.reset} ${C.dim}${truncate(lastLine, w - 90)}${C.reset}`;
         break;
 
       case "crashed":
@@ -311,10 +382,13 @@ function renderServers() {
     const line =
       ` ${pad(String(srv.id), 4)}` +
       `${pad(String(srv.port), 7)}` +
-      `${statusColor}${pad(statusText, 12)}${C.reset}` +
+      `${statusColor}${pad(statusText, 10)}${C.reset}` +
       `${pad(String(srv.pid || "-"), 8)}` +
-      `${pad(String(srv.tasksCompleted), 7)}` +
-      `${pad(elapsed, 10)}` +
+      `${cpuColor}${pad(cpuStr, 6)}${C.reset}` +
+      `${pad(memStr, 7)}` +
+      `${pad(ioStr, 8)}` +
+      `${pad(String(srv.tasksCompleted), 6)}` +
+      `${pad(elapsed, 9)}` +
       detail;
 
     process.stdout.write(truncate(line.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").length > w ? line : line, w * 3) + "\n");
@@ -333,12 +407,13 @@ function pad(s, len) {
 
 let startTime = Date.now();
 
-function render() {
-  clearScreen();
-  renderHeader();
-  renderServers();
-  renderFooter();
-}
+  function render() {
+    collectStats();
+    clearScreen();
+    renderHeader();
+    renderServers();
+    renderFooter();
+  }
 
 // ── Main Loop ──
 
