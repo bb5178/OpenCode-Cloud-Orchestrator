@@ -4,8 +4,9 @@ node_modules/
 .env
 *.log
 
-# Local runner config with secrets
+# Local configs with real resource IDs and secrets
 run.sh
+wrangler.local.jsonc
 
 # Lock files (let users generate their own)
 package-lock.json

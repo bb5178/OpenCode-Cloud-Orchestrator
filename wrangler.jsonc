@@ -8,6 +8,7 @@
   },
 
   // Custom domain — update with your domain
+  // Remove routes and set workers_dev: true if you don't have a custom domain
   "routes": [
     {
       "pattern": "oco.yourdomain.com/*",
@@ -26,6 +27,7 @@
   ],
 
   // D1 database — run: npx wrangler d1 create oco-db
+  // Replace database_id with your value from the create command
   "d1_databases": [
     {
       "binding": "DB",
@@ -35,6 +37,7 @@
   ],
 
   // KV namespace — run: npx wrangler kv namespace create TASK_QUEUE
+  // Replace id with your value from the create command
   "kv_namespaces": [
     {
       "binding": "TASK_QUEUE",
