@@ -363,24 +363,32 @@ async function main() {
   // Wait for servers to warm up
   await sleep(SERVER_WARMUP_MS + 1000);
 
-  // Poll loop
+  // Poll loop — burst-poll when idle servers are available
   while (!shuttingDown) {
     try {
       const idle = getIdleServer();
       if (!idle) {
-        await sleep(1000);
+        await sleep(500);
         continue;
       }
 
       const response = await poll();
       if (!response.task) {
+        // No tasks available — slow poll
         await sleep(POLL_INTERVAL);
         continue;
       }
 
       // Execute (non-blocking)
       executeTask(idle, response.task);
-      await sleep(200);
+
+      // If more idle servers, immediately poll again (burst mode)
+      const nextIdle = getIdleServer();
+      if (nextIdle) {
+        await sleep(100); // tiny delay to avoid hammering
+      } else {
+        await sleep(500);
+      }
     } catch (err) {
       await sleep(POLL_INTERVAL);
     }
