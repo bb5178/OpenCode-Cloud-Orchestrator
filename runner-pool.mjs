@@ -145,6 +145,32 @@ function getIdleServer() {
 
 // ── Task Execution ──
 
+// Track local failure history for prompt rewriting
+const failureHistory = {};  // taskId -> { count, errors[] }
+
+function getRetryGuidance(taskId) {
+  const history = failureHistory[taskId];
+  if (!history || history.count < 2) return "";
+
+  const guidance = [
+    "\n\n--- RETRY GUIDANCE (this task has failed " + history.count + " times) ---",
+    "Previous attempts failed with these errors:",
+  ];
+  for (const err of history.errors.slice(-3)) {
+    guidance.push("  - " + err);
+  }
+  guidance.push("");
+  guidance.push("IMPORTANT: Adjust your approach to avoid the same failure:");
+  guidance.push("- If web fetches are timing out, DO NOT fetch those URLs again. Use your existing knowledge instead.");
+  guidance.push("- If a website is unreachable, skip it and note it as unavailable. Do not retry the same URL.");
+  guidance.push("- Prefer APIs over web page scraping (e.g., use peeringdb.com/api/ not the web UI).");
+  guidance.push("- If you cannot get the data from the internet, produce the best answer you can from your training knowledge.");
+  guidance.push("- Produce a result even if incomplete — a partial result is better than another timeout.");
+  guidance.push("--- End retry guidance ---");
+
+  return guidance.join("\n");
+}
+
 async function executeTask(server, task) {
   server.status = "running";
   server.taskId = task.id;
@@ -156,6 +182,13 @@ async function executeTask(server, task) {
 
   // Build prompt with context
   let prompt = task.prompt;
+
+  // Add retry guidance if this task has failed before
+  const retryGuidance = getRetryGuidance(task.id);
+  if (retryGuidance) {
+    prompt += retryGuidance;
+  }
+
   const ctx = task.context || {};
   if (Object.keys(ctx).length > 0) {
     prompt += "\n\n--- Context from completed dependency tasks ---\n";
@@ -191,13 +224,18 @@ async function executeTask(server, task) {
       const timeoutTimer = setTimeout(() => {
         if (!settled) {
           settled = true;
+          // Record timeout in failure history
+          if (!failureHistory[task.id]) failureHistory[task.id] = { count: 0, errors: [] };
+          failureHistory[task.id].count++;
+          failureHistory[task.id].errors.push(`Timeout after ${TASK_TIMEOUT_MS / 1000}s`);
+
           child.kill("SIGTERM");
           // Give partial result if we have output
           const partial = stdout.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
           if (partial.length > 100) {
             resolve(partial + "\n\n[TIMEOUT: Task exceeded " + (TASK_TIMEOUT_MS / 1000) + "s limit. Partial result returned.]");
           } else {
-            reject(new Error(`Task timeout after ${TASK_TIMEOUT_MS / 1000}s`));
+            reject(new Error(`Task timeout after ${TASK_TIMEOUT_MS / 1000}s (attempt ${failureHistory[task.id].count})`));
           }
         }
       }, TASK_TIMEOUT_MS);
@@ -235,6 +273,10 @@ async function executeTask(server, task) {
     totalCompleted++;
   } catch (err) {
     totalFailed++;
+    // Record failure for retry guidance
+    if (!failureHistory[task.id]) failureHistory[task.id] = { count: 0, errors: [] };
+    failureHistory[task.id].count++;
+    failureHistory[task.id].errors.push(err.message?.slice(0, 200) || "unknown error");
     try { await updateStatus(task.id, "failed", err.message?.slice(0, 500)); } catch {}
   } finally {
     server.status = "idle";
@@ -263,13 +305,17 @@ function runWatchdog() {
       const taskId = srv.taskId || "unknown";
       const taskShort = taskId.split("/").pop();
 
+      // Record in failure history before killing
+      if (!failureHistory[taskId]) failureHistory[taskId] = { count: 0, errors: [] };
+      failureHistory[taskId].count++;
+      failureHistory[taskId].errors.push(`Watchdog killed: hung for ${Math.floor(silentMs / 1000)}s with 0 CPU/IO`);
+
       // Kill the child process
       if (srv._childProcess) {
         try {
           srv._childProcess.kill("SIGTERM");
           watchdogKills++;
-          // Log to server output so TUI shows what happened
-          srv.output += `\n[WATCHDOG] Killed hung task ${taskShort} after ${Math.floor(silentMs / 1000)}s of inactivity`;
+          srv.output += `\n[WATCHDOG] Killed hung task ${taskShort} after ${Math.floor(silentMs / 1000)}s of inactivity (attempt ${failureHistory[taskId].count})`;
         } catch {}
       }
 
