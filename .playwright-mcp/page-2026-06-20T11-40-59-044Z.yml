@@ -1,0 +1,741 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2Fsearch&source=header
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e61]:
+    - generic [ref=e64]:
+      - heading "repositories Search Results · AI agent orchestrator" [level=1] [ref=e65]
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - region "Filter by" [ref=e70]:
+            - heading "Filter by" [level=2] [ref=e71]
+            - list "Filter by" [ref=e76]:
+              - listitem [ref=e77]:
+                - list [ref=e78]:
+                  - listitem [ref=e79]:
+                    - link "Code (...) results" [ref=e80] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=code
+                      - generic:
+                        - img
+                      - generic [ref=e81]:
+                        - generic [ref=e82]: Code
+                        - generic:
+                          - generic: ...
+                          - generic: (...)
+                          - generic: results
+                  - listitem [ref=e83]:
+                    - link "Repositories results" [ref=e84] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories
+                      - generic:
+                        - img
+                      - generic [ref=e85]:
+                        - generic [ref=e86]: Repositories
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e87]:
+                    - link "Issues results" [ref=e88] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=issues
+                      - generic:
+                        - img
+                      - generic [ref=e89]:
+                        - generic [ref=e90]: Issues
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e91]:
+                    - link "Pull requests results" [ref=e92] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=pullrequests
+                      - generic:
+                        - img
+                      - generic [ref=e93]:
+                        - generic [ref=e94]: Pull requests
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e95]:
+                    - link "Discussions results" [ref=e96] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=discussions
+                      - generic:
+                        - img
+                      - generic [ref=e97]:
+                        - generic [ref=e98]: Discussions
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e99]:
+                    - link "Users results" [ref=e100] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator&type=users
+                      - generic:
+                        - img
+                      - generic [ref=e101]:
+                        - generic [ref=e102]: Users
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e103]:
+                    - button "More" [ref=e104] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic [ref=e106]: More
+              - listitem [ref=e107]
+              - listitem [ref=e108]:
+                - heading "Languages" [level=3] [ref=e110]
+                - list "Languages" [ref=e111]:
+                  - listitem [ref=e112]:
+                    - link "Python" [ref=e113] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3APython&type=repositories&s=stars&o=desc
+                      - generic "Python" [ref=e117]
+                  - listitem [ref=e118]:
+                    - link "TypeScript" [ref=e119] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3ATypeScript&type=repositories&s=stars&o=desc
+                      - generic "TypeScript" [ref=e123]
+                  - listitem [ref=e124]:
+                    - link "JavaScript" [ref=e125] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AJavaScript&type=repositories&s=stars&o=desc
+                      - generic "JavaScript" [ref=e129]
+                  - listitem [ref=e130]:
+                    - link "Shell" [ref=e131] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AShell&type=repositories&s=stars&o=desc
+                      - generic "Shell" [ref=e135]
+                  - listitem [ref=e136]:
+                    - link "HTML" [ref=e137] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AHTML&type=repositories&s=stars&o=desc
+                      - generic "HTML" [ref=e141]
+                  - listitem [ref=e142]:
+                    - link "Jupyter Notebook" [ref=e143] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AJupyter+Notebook&type=repositories&s=stars&o=desc
+                      - generic "Jupyter Notebook" [ref=e147]
+                  - listitem [ref=e148]:
+                    - link "Go" [ref=e149] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AGo&type=repositories&s=stars&o=desc
+                      - generic "Go" [ref=e153]
+                  - listitem [ref=e154]:
+                    - link "Rust" [ref=e155] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3ARust&type=repositories&s=stars&o=desc
+                      - generic "Rust" [ref=e159]
+                  - listitem [ref=e160]:
+                    - link "Java" [ref=e161] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AJava&type=repositories&s=stars&o=desc
+                      - generic "Java" [ref=e165]
+                  - listitem [ref=e166]:
+                    - link "C#" [ref=e167] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+language%3AC%23&type=repositories&s=stars&o=desc
+                      - generic "C#" [ref=e171]
+                  - listitem [ref=e172]:
+                    - button "More languages..." [ref=e173] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "More languages..." [ref=e176]
+                  - listitem [ref=e177]
+              - listitem [ref=e178]:
+                - heading "Advanced" [level=3] [ref=e180]
+                - list "Advanced" [ref=e181]:
+                  - listitem [ref=e182]:
+                    - button "Owner" [ref=e183] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Owner" [ref=e187]
+                  - listitem [ref=e188]:
+                    - button "Size" [ref=e189] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Size" [ref=e193]
+                  - listitem [ref=e194]:
+                    - button "Number of followers" [ref=e195] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of followers" [ref=e199]
+                  - listitem [ref=e200]:
+                    - button "Number of forks" [ref=e201] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of forks" [ref=e205]
+                  - listitem [ref=e206]:
+                    - button "Number of stars" [ref=e207] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of stars" [ref=e211]
+                  - listitem [ref=e212]:
+                    - button "Date created" [ref=e213] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Date created" [ref=e217]
+                  - listitem [ref=e218]:
+                    - button "Date pushed" [ref=e219] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Date pushed" [ref=e223]
+                  - listitem [ref=e224]:
+                    - button "Topic" [ref=e225] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Topic" [ref=e229]
+                  - listitem [ref=e230]:
+                    - button "License" [ref=e231] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "License" [ref=e235]
+                  - listitem [ref=e236]:
+                    - button "Archived" [ref=e237] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Archived" [ref=e241]
+                  - listitem [ref=e242]:
+                    - link "Public" [ref=e243] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+is%3Apublic&type=repositories&s=stars&o=desc
+                      - generic:
+                        - img
+                      - generic "Public" [ref=e247]
+                  - listitem [ref=e248]:
+                    - link "Private" [ref=e249] [cursor=pointer]:
+                      - /url: https://github.com/search?q=AI+agent+orchestrator+is%3Aprivate&type=repositories&s=stars&o=desc
+                      - generic:
+                        - img
+                      - generic "Private" [ref=e253]
+              - listitem [ref=e254]
+              - listitem [ref=e255]:
+                - link "Advanced search" [ref=e256] [cursor=pointer]:
+                  - /url: /search/advanced
+                  - generic:
+                    - img
+                  - generic [ref=e258]: Advanced search
+          - slider "Draggable pane splitter" [ref=e260]
+        - generic [ref=e263]:
+          - generic [ref=e264]:
+            - generic [ref=e266]:
+              - generic [ref=e267]:
+                - generic [ref=e268]:
+                  - generic [ref=e269]: 13.6k results
+                  - generic [ref=e270]: (340 ms)
+                - heading "13.6k results" [active] [level=2] [ref=e271]
+              - generic [ref=e272]:
+                - 'button "Sort by: Most stars" [ref=e274] [cursor=pointer]':
+                  - generic [ref=e276]: "Sort by: Most stars"
+                  - generic:
+                    - img
+                - button "Open column options" [ref=e278] [cursor=pointer]:
+                  - img [ref=e279]
+            - generic [ref=e283]:
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - heading "crewAIInc/crewAI" [level=3] [ref=e287]:
+                    - link "crewAIInc/crewAI" [ref=e291] [cursor=pointer]:
+                      - /url: /crewAIInc/crewAI
+                      - generic [ref=e292]:
+                        - text: crewAIInc/crew
+                        - emphasis [ref=e293]: AI
+                  - generic [ref=e295]:
+                    - text: Framework for
+                    - emphasis [ref=e296]: orchestrating
+                    - text: role-playing, autonomous
+                    - emphasis [ref=e297]: AI
+                    - emphasis [ref=e298]: agents
+                    - text: . By fostering collaborative intelligence, CrewAI empowers
+                    - emphasis [ref=e299]: agents
+                    - text: to work t…
+                  - generic [ref=e300]:
+                    - link "ai" [ref=e302] [cursor=pointer]:
+                      - /url: /topics/ai
+                    - link "agents" [ref=e304] [cursor=pointer]:
+                      - /url: /topics/agents
+                    - link "ai-agents" [ref=e306] [cursor=pointer]:
+                      - /url: /topics/ai-agents
+                    - link "llms" [ref=e308] [cursor=pointer]:
+                      - /url: /topics/llms
+                    - link "aiagentframework" [ref=e310] [cursor=pointer]:
+                      - /url: /topics/aiagentframework
+                  - list [ref=e311]:
+                    - listitem [ref=e312]:
+                      - generic "Python language" [ref=e315]: Python
+                    - generic [ref=e316]: ·
+                    - listitem [ref=e317]:
+                      - link "54013 stars" [ref=e318] [cursor=pointer]:
+                        - /url: /crewAIInc/crewAI/stargazers
+                        - img [ref=e319]
+                        - generic [ref=e321]: 54k
+                    - generic [ref=e322]: ·
+                    - listitem [ref=e323]:
+                      - generic [ref=e324]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 10:13 AM UTC" [ref=e325]: 1 hour ago
+                - link "Star" [ref=e328] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e329]:
+                    - generic:
+                      - img
+                    - generic [ref=e330]: Star
+              - generic [ref=e332]:
+                - generic [ref=e333]:
+                  - heading "conductor-oss/conductor" [level=3] [ref=e334]:
+                    - link "conductor-oss/conductor" [ref=e338] [cursor=pointer]:
+                      - /url: /conductor-oss/conductor
+                  - generic [ref=e340]:
+                    - text: Conductor is an event driven
+                    - emphasis [ref=e341]: agentic
+                    - text: workflow engine providing durable and highly resilient execution engine for applications and
+                    - emphasis [ref=e342]: AI
+                    - emphasis [ref=e343]: Agents
+                  - generic [ref=e344]:
+                    - link "javascript" [ref=e346] [cursor=pointer]:
+                      - /url: /topics/javascript
+                    - link "java" [ref=e348] [cursor=pointer]:
+                      - /url: /topics/java
+                    - link "distributed-systems" [ref=e350] [cursor=pointer]:
+                      - /url: /topics/distributed-systems
+                    - link "spring-boot" [ref=e352] [cursor=pointer]:
+                      - /url: /topics/spring-boot
+                    - link "reactjs" [ref=e354] [cursor=pointer]:
+                      - /url: /topics/reactjs
+                  - list [ref=e355]:
+                    - listitem [ref=e356]:
+                      - generic "Java language" [ref=e359]: Java
+                    - generic [ref=e360]: ·
+                    - listitem [ref=e361]:
+                      - link "31960 stars" [ref=e362] [cursor=pointer]:
+                        - /url: /conductor-oss/conductor/stargazers
+                        - img [ref=e363]
+                        - generic [ref=e365]: 32k
+                    - generic [ref=e366]: ·
+                    - listitem [ref=e367]:
+                      - generic [ref=e368]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 6:43 AM UTC" [ref=e369]: 4 hours ago
+                - link "Star" [ref=e372] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e373]:
+                    - generic:
+                      - img
+                    - generic [ref=e374]: Star
+              - generic [ref=e376]:
+                - generic [ref=e377]:
+                  - heading "simstudioai/sim" [level=3] [ref=e378]:
+                    - link "simstudioai/sim" [ref=e382] [cursor=pointer]:
+                      - /url: /simstudioai/sim
+                  - generic [ref=e384]:
+                    - text: Build, deploy, and
+                    - emphasis [ref=e385]: orchestrate
+                    - emphasis [ref=e386]: AI
+                    - emphasis [ref=e387]: agents
+                    - text: . Sim is the central intelligence layer for your
+                    - emphasis [ref=e388]: AI
+                    - text: workforce.
+                  - generic [ref=e389]:
+                    - link "react" [ref=e391] [cursor=pointer]:
+                      - /url: /topics/react
+                    - link "automation" [ref=e393] [cursor=pointer]:
+                      - /url: /topics/automation
+                    - link "typescript" [ref=e395] [cursor=pointer]:
+                      - /url: /topics/typescript
+                    - link "ai" [ref=e397] [cursor=pointer]:
+                      - /url: /topics/ai
+                    - link "nextjs" [ref=e399] [cursor=pointer]:
+                      - /url: /topics/nextjs
+                  - list [ref=e400]:
+                    - listitem [ref=e401]:
+                      - generic "TypeScript language" [ref=e404]: TypeScript
+                    - generic [ref=e405]: ·
+                    - listitem [ref=e406]:
+                      - link "28825 stars" [ref=e407] [cursor=pointer]:
+                        - /url: /simstudioai/sim/stargazers
+                        - img [ref=e408]
+                        - generic [ref=e410]: 28.8k
+                    - generic [ref=e411]: ·
+                    - listitem [ref=e412]:
+                      - generic [ref=e413]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 9:50 AM UTC" [ref=e414]: 1 hour ago
+                - link "Star" [ref=e417] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e418]:
+                    - generic:
+                      - img
+                    - generic [ref=e419]: Star
+              - generic [ref=e421]:
+                - generic [ref=e422]:
+                  - heading "labring/FastGPT" [level=3] [ref=e423]:
+                    - link "labring/FastGPT" [ref=e427] [cursor=pointer]:
+                      - /url: /labring/FastGPT
+                  - generic [ref=e428]: FastGPT is a knowledge-based platform built on the LLMs, offers a comprehensive suite of out-of-the-box capabilities such as data process…
+                  - generic [ref=e429]:
+                    - link "agent" [ref=e431] [cursor=pointer]:
+                      - /url: /topics/agent
+                    - link "workflow" [ref=e433] [cursor=pointer]:
+                      - /url: /topics/workflow
+                    - link "mcp" [ref=e435] [cursor=pointer]:
+                      - /url: /topics/mcp
+                    - link "nextjs" [ref=e437] [cursor=pointer]:
+                      - /url: /topics/nextjs
+                    - link "openai" [ref=e439] [cursor=pointer]:
+                      - /url: /topics/openai
+                  - list [ref=e440]:
+                    - listitem [ref=e441]:
+                      - generic "TypeScript language" [ref=e444]: TypeScript
+                    - generic [ref=e445]: ·
+                    - listitem [ref=e446]:
+                      - link "28557 stars" [ref=e447] [cursor=pointer]:
+                        - /url: /labring/FastGPT/stargazers
+                        - img [ref=e448]
+                        - generic [ref=e450]: 28.6k
+                    - generic [ref=e451]: ·
+                    - listitem [ref=e452]:
+                      - generic [ref=e453]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 8:36 AM UTC" [ref=e454]: 3 hours ago
+                - link "Star" [ref=e457] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e458]:
+                    - generic:
+                      - img
+                    - generic [ref=e459]: Star
+              - generic [ref=e461]:
+                - generic [ref=e462]:
+                  - heading "deepset-ai/haystack" [level=3] [ref=e463]:
+                    - link "deepset-ai/haystack" [ref=e467] [cursor=pointer]:
+                      - /url: /deepset-ai/haystack
+                  - generic [ref=e469]:
+                    - text: Open-source
+                    - emphasis [ref=e470]: AI
+                    - emphasis [ref=e471]: orchestration
+                    - text: framework for building context-engineered, production-ready LLM applications. Design modular pipelines and
+                    - emphasis [ref=e472]: a…
+                  - generic [ref=e473]:
+                    - link "python" [ref=e475] [cursor=pointer]:
+                      - /url: /topics/python
+                    - link "nlp" [ref=e477] [cursor=pointer]:
+                      - /url: /topics/nlp
+                    - link "agent" [ref=e479] [cursor=pointer]:
+                      - /url: /topics/agent
+                    - link "machine-learning" [ref=e481] [cursor=pointer]:
+                      - /url: /topics/machine-learning
+                    - link "information-retrieval" [ref=e483] [cursor=pointer]:
+                      - /url: /topics/information-retrieval
+                  - list [ref=e484]:
+                    - listitem [ref=e485]:
+                      - generic "MDX language" [ref=e488]: MDX
+                    - generic [ref=e489]: ·
+                    - listitem [ref=e490]:
+                      - link "25615 stars" [ref=e491] [cursor=pointer]:
+                        - /url: /deepset-ai/haystack/stargazers
+                        - img [ref=e492]
+                        - generic [ref=e494]: 25.6k
+                    - generic [ref=e495]: ·
+                    - listitem [ref=e496]:
+                      - generic [ref=e497]:
+                        - text: Updated
+                        - generic "Jun 19, 2026, 2:51 PM UTC" [ref=e498]: 20 hours ago
+                - link "Star" [ref=e501] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e502]:
+                    - generic:
+                      - img
+                    - generic [ref=e503]: Star
+              - generic [ref=e505]:
+                - generic [ref=e506]:
+                  - heading "cft0808/edict" [level=3] [ref=e507]:
+                    - link "cft0808/edict" [ref=e511] [cursor=pointer]:
+                      - /url: /cft0808/edict
+                  - generic [ref=e513]:
+                    - text: 🏛️ 三省六部制 · OpenClaw Multi-
+                    - emphasis [ref=e514]: Agent
+                    - emphasis [ref=e515]: Orchestration
+                    - text: System — 9 specialized
+                    - emphasis [ref=e516]: AI
+                    - emphasis [ref=e517]: agents
+                    - text: with real-time dashboard, model config, and full audit trails
+                  - generic [ref=e518]:
+                    - link "python" [ref=e520] [cursor=pointer]:
+                      - /url: /topics/python
+                    - link "dashboard" [ref=e522] [cursor=pointer]:
+                      - /url: /topics/dashboard
+                    - link "orchestration" [ref=e524] [cursor=pointer]:
+                      - /url: /topics/orchestration
+                    - link "multi-agent" [ref=e526] [cursor=pointer]:
+                      - /url: /topics/multi-agent
+                    - link "kanban" [ref=e528] [cursor=pointer]:
+                      - /url: /topics/kanban
+                  - list [ref=e529]:
+                    - listitem [ref=e530]:
+                      - generic "Python language" [ref=e533]: Python
+                    - generic [ref=e534]: ·
+                    - listitem [ref=e535]:
+                      - link "16098 stars" [ref=e536] [cursor=pointer]:
+                        - /url: /cft0808/edict/stargazers
+                        - img [ref=e537]
+                        - generic [ref=e539]: 16.1k
+                    - generic [ref=e540]: ·
+                    - listitem [ref=e541]:
+                      - generic [ref=e542]:
+                        - text: Updated
+                        - generic "Jun 16, 2026, 1:06 PM UTC" [ref=e543]: 3 days ago
+                - link "Star" [ref=e546] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e547]:
+                    - generic:
+                      - img
+                    - generic [ref=e548]: Star
+              - generic [ref=e550]:
+                - generic [ref=e551]:
+                  - heading "jnMetaCode/agency-agents-zh" [level=3] [ref=e552]:
+                    - link "jnMetaCode/agency-agents-zh" [ref=e556] [cursor=pointer]:
+                      - /url: /jnMetaCode/agency-agents-zh
+                      - generic [ref=e557]:
+                        - text: jnMetaCode/agency-
+                        - emphasis [ref=e558]: agents
+                        - text: "-zh"
+                  - generic [ref=e560]:
+                    - text: 🎭 266 个即插即用的
+                    - emphasis [ref=e561]: AI
+                    - text: 专家角色 — 支持 Hermes
+                    - emphasis [ref=e562]: Agent
+                    - text: /Claude Code/Cursor/Copilot 等 18 种工具，覆盖工程/设计/营销/金融等 20 个部门。含 50 个中国市场原创智能体（小红书/抖音/微信/飞书/钉钉等）。搭配编排器 …
+                  - generic [ref=e563]:
+                    - link "workflow" [ref=e565] [cursor=pointer]:
+                      - /url: /topics/workflow
+                    - link "multi-agent" [ref=e567] [cursor=pointer]:
+                      - /url: /topics/multi-agent
+                    - link "chinese" [ref=e569] [cursor=pointer]:
+                      - /url: /topics/chinese
+                    - link "no-code" [ref=e571] [cursor=pointer]:
+                      - /url: /topics/no-code
+                    - link "ai-agents" [ref=e573] [cursor=pointer]:
+                      - /url: /topics/ai-agents
+                  - list [ref=e574]:
+                    - listitem [ref=e575]:
+                      - generic "Shell language" [ref=e578]: Shell
+                    - generic [ref=e579]: ·
+                    - listitem [ref=e580]:
+                      - link "15271 stars" [ref=e581] [cursor=pointer]:
+                        - /url: /jnMetaCode/agency-agents-zh/stargazers
+                        - img [ref=e582]
+                        - generic [ref=e584]: 15.3k
+                    - generic [ref=e585]: ·
+                    - listitem [ref=e586]:
+                      - generic [ref=e587]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 1:50 AM UTC" [ref=e588]: 9 hours ago
+                - link "Star" [ref=e591] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e592]:
+                    - generic:
+                      - img
+                    - generic [ref=e593]: Star
+              - generic [ref=e595]:
+                - generic [ref=e596]:
+                  - heading "microsoft/agent-framework" [level=3] [ref=e597]:
+                    - link "microsoft/agent-framework" [ref=e601] [cursor=pointer]:
+                      - /url: /microsoft/agent-framework
+                      - generic [ref=e602]:
+                        - text: microsoft/
+                        - emphasis [ref=e603]: agent
+                        - text: "-framework"
+                  - generic [ref=e605]:
+                    - text: A framework for building,
+                    - emphasis [ref=e606]: orchestrating
+                    - text: and deploying
+                    - emphasis [ref=e607]: AI
+                    - emphasis [ref=e608]: agents
+                    - text: and multi-
+                    - emphasis [ref=e609]: agent
+                    - text: workflows with support for Python and .NET.
+                  - generic [ref=e610]:
+                    - link "python" [ref=e612] [cursor=pointer]:
+                      - /url: /topics/python
+                    - link "sdk" [ref=e614] [cursor=pointer]:
+                      - /url: /topics/sdk
+                    - link "ai" [ref=e616] [cursor=pointer]:
+                      - /url: /topics/ai
+                    - link "dotnet" [ref=e618] [cursor=pointer]:
+                      - /url: /topics/dotnet
+                    - link "orchestration" [ref=e620] [cursor=pointer]:
+                      - /url: /topics/orchestration
+                  - list [ref=e621]:
+                    - listitem [ref=e622]:
+                      - generic "Python language" [ref=e625]: Python
+                    - generic [ref=e626]: ·
+                    - listitem [ref=e627]:
+                      - link "11497 stars" [ref=e628] [cursor=pointer]:
+                        - /url: /microsoft/agent-framework/stargazers
+                        - img [ref=e629]
+                        - generic [ref=e631]: 11.5k
+                    - generic [ref=e632]: ·
+                    - listitem [ref=e633]:
+                      - generic [ref=e634]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 9:43 AM UTC" [ref=e635]: 1 hour ago
+                - link "Star" [ref=e638] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e639]:
+                    - generic:
+                      - img
+                    - generic [ref=e640]: Star
+              - generic [ref=e642]:
+                - generic [ref=e643]:
+                  - heading "yzhao062/pyod" [level=3] [ref=e644]:
+                    - link "yzhao062/pyod" [ref=e648] [cursor=pointer]:
+                      - /url: /yzhao062/pyod
+                  - generic [ref=e649]: A Python library for anomaly detection across tabular, time series, graph, text, image, and audio data. 60+ detectors, benchmark-backed A…
+                  - generic [ref=e650]:
+                    - link "data-science" [ref=e652] [cursor=pointer]:
+                      - /url: /topics/data-science
+                    - link "machine-learning" [ref=e654] [cursor=pointer]:
+                      - /url: /topics/machine-learning
+                    - link "data-mining" [ref=e656] [cursor=pointer]:
+                      - /url: /topics/data-mining
+                    - link "deep-learning" [ref=e658] [cursor=pointer]:
+                      - /url: /topics/deep-learning
+                    - link "time-series" [ref=e660] [cursor=pointer]:
+                      - /url: /topics/time-series
+                  - list [ref=e661]:
+                    - listitem [ref=e662]:
+                      - generic "Python language" [ref=e665]: Python
+                    - generic [ref=e666]: ·
+                    - listitem [ref=e667]:
+                      - link "9883 stars" [ref=e668] [cursor=pointer]:
+                        - /url: /yzhao062/pyod/stargazers
+                        - img [ref=e669]
+                        - generic [ref=e671]: 9.9k
+                    - generic [ref=e672]: ·
+                    - listitem [ref=e673]:
+                      - generic [ref=e674]:
+                        - text: Updated
+                        - generic "Jun 17, 2026, 2:43 AM UTC" [ref=e675]: 3 days ago
+                - link "Star" [ref=e678] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e679]:
+                    - generic:
+                      - img
+                    - generic [ref=e680]: Star
+              - generic [ref=e682]:
+                - generic [ref=e683]:
+                  - heading "2FastLabs/agent-squad" [level=3] [ref=e684]:
+                    - link "2FastLabs/agent-squad" [ref=e688] [cursor=pointer]:
+                      - /url: /2FastLabs/agent-squad
+                      - generic [ref=e689]:
+                        - text: 2FastLabs/
+                        - emphasis [ref=e690]: agent
+                        - text: "-squad"
+                  - generic [ref=e692]:
+                    - text: Flexible and powerful framework for managing multiple
+                    - emphasis [ref=e693]: AI
+                    - emphasis [ref=e694]: agents
+                    - text: and handling complex conversations
+                  - generic [ref=e695]:
+                    - link "python" [ref=e697] [cursor=pointer]:
+                      - /url: /topics/python
+                    - link "aws" [ref=e699] [cursor=pointer]:
+                      - /url: /topics/aws
+                    - link "machine-learning" [ref=e701] [cursor=pointer]:
+                      - /url: /topics/machine-learning
+                    - link "framework" [ref=e703] [cursor=pointer]:
+                      - /url: /topics/framework
+                    - link "typescript" [ref=e705] [cursor=pointer]:
+                      - /url: /topics/typescript
+                  - list [ref=e706]:
+                    - listitem [ref=e707]:
+                      - generic "Python language" [ref=e710]: Python
+                    - generic [ref=e711]: ·
+                    - listitem [ref=e712]:
+                      - link "7661 stars" [ref=e713] [cursor=pointer]:
+                        - /url: /2FastLabs/agent-squad/stargazers
+                        - img [ref=e714]
+                        - generic [ref=e716]: 7.7k
+                    - generic [ref=e717]: ·
+                    - listitem [ref=e718]:
+                      - generic [ref=e719]:
+                        - text: Updated
+                        - generic "Jun 20, 2026, 5:18 AM UTC" [ref=e720]: 6 hours ago
+                - link "Star" [ref=e723] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3DAI%2Bagent%2Borchestrator%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e724]:
+                    - generic:
+                      - img
+                    - generic [ref=e725]: Star
+            - navigation "Pagination" [ref=e728]:
+              - generic [ref=e729]:
+                - generic [ref=e730]:
+                  - img [ref=e731]
+                  - text: Previous
+                - link "Page 1" [ref=e733] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=1
+                  - text: "1"
+                - link "Page 2" [ref=e734] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=2
+                  - text: "2"
+                - link "Page 3" [ref=e735] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=3
+                  - text: "3"
+                - link "Page 4" [ref=e736] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=4
+                  - text: "4"
+                - link "Page 5" [ref=e737] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=5
+                  - text: "5"
+                - link "Page 6" [ref=e738] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=6
+                  - text: "6"
+                - link "Page 7..." [ref=e739] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=7
+                  - text: "7"
+                - text: …
+                - link "Page 100" [ref=e740] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=100
+                  - text: "100"
+                - link "Next Page" [ref=e741] [cursor=pointer]:
+                  - /url: https://github.com/search?q=AI+agent+orchestrator&type=repositories&s=stars&o=desc&p=2
+                  - text: Next
+                  - img [ref=e742]
+          - generic [ref=e745]:
+            - generic [ref=e746]:
+              - img "Package icon" [ref=e748]
+              - heading "Sponsor open source projects you depend on" [level=2] [ref=e749]
+              - generic [ref=e750]: Contributors are working behind the scenes to make open source better for everyone—give them the help and recognition they deserve.
+              - link "Explore sponsorable projects" [ref=e751] [cursor=pointer]:
+                - /url: https://github.com/sponsors/explore
+                - text: Explore sponsorable projects
+                - img [ref=e752]
+            - generic [ref=e754]:
+              - generic [ref=e755]:
+                - img [ref=e756]
+                - text: ProTip!
+              - generic [ref=e758]:
+                - text: Press the
+                - generic [ref=e759]: /
+                - text: key to activate the search input again and adjust your query.

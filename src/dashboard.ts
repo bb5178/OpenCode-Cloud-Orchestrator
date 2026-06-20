@@ -732,11 +732,19 @@ export function renderDashboard(): string {
     let planPollTimer = null;
 
     async function planNewJob() {
-      const prompt = document.getElementById('jobPrompt').value.trim();
+      const promptEl = document.getElementById('jobPrompt');
+      const modelEl = document.getElementById('jobModel');
+      const preview = document.getElementById('planPreview');
+
+      if (!promptEl || !modelEl || !preview) {
+        alert('Modal elements not found — try reopening the New Job dialog');
+        return;
+      }
+
+      const prompt = promptEl.value.trim();
       if (!prompt) { alert('Enter a prompt first'); return; }
 
-      const model = document.getElementById('jobModel').value;
-      const preview = document.getElementById('planPreview');
+      const model = modelEl.value;
 
       // Stop any existing plan polling
       if (planPollTimer) { clearInterval(planPollTimer); planPollTimer = null; }

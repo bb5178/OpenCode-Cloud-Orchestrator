@@ -146,8 +146,8 @@ async function handlePlanJob(
   body: PlanJobRequest,
   headers: Record<string, string>
 ): Promise<Response> {
-  if (!body.prompt || body.prompt.trim().length === 0) {
-    return json({ error: "Prompt is required" }, 400, headers);
+  if (!body || !body.prompt || typeof body.prompt !== "string" || body.prompt.trim().length === 0) {
+    return json({ error: `Prompt is required. Received: ${JSON.stringify(body).slice(0, 200)}` }, 400, headers);
   }
 
   const planId = `plan-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -155,22 +155,25 @@ async function handlePlanJob(
 
   // Create a plan job — a single task that runs locally via the runner
   // with full OpenCode context (AGENTS.md, codebase, tools)
-  const planPrompt = `You are a task planner. Given the following user request, decompose it into discrete, executable tasks with dependencies.
+  const planPrompt = `You are a task planner for an orchestration system called OCO. Given the user request below, decompose it into discrete tasks with dependencies.
 
 USER REQUEST:
 "${body.prompt}"
 
-Rules:
-1. Each task should be self-contained — an AI agent can complete it independently.
-2. Use clear, descriptive task IDs (lowercase, hyphens). E.g. "research-auth", "write-tests".
-3. Define dependencies — a task only starts after its dependencies complete. Results from dependencies are automatically passed as context.
-4. Maximize parallelism — independent tasks should have no dependency relationship.
-5. Typically 3-20 tasks depending on complexity.
-6. Each task prompt should be detailed and unambiguous.
-7. Consider the local codebase, project structure, and available tools when planning.
+PLANNING RULES:
+1. Each task must be self-contained — an independent AI agent session will execute it with NO access to other tasks' work.
+2. Use descriptive task IDs (lowercase, hyphens). E.g. "research-auth", "write-tests", "analyze-results".
+3. Dependencies define execution order. A task only starts after ALL its dependencies complete. Results from dependencies are automatically passed as context to the dependent task.
+4. Maximize parallelism — tasks with no data dependency should NOT depend on each other.
+5. Aim for 3-20 tasks depending on complexity.
+6. Each task prompt must be detailed and specific enough for an AI agent to execute without ambiguity.
+7. Consider the local project context when planning — what files exist, what tools are available.
 
-Respond with ONLY valid JSON (no markdown fences, no explanation):
-{"tasks":[{"id":"task-id","prompt":"Detailed instruction","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine results"}}`;
+YOUR OUTPUT MUST BE EXACTLY ONE JSON OBJECT — nothing else. No explanation before or after. No markdown fences. No commentary. Just the raw JSON:
+
+{"tasks":[{"id":"example-task","prompt":"Detailed instruction for this task","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine the results of all tasks into a final output"}}
+
+CRITICAL: Your entire response must be parseable as JSON. Do not write anything before or after the JSON object.`;
 
   // Create a lightweight plan job in D1
   await db.createJob(env.DB, planId, body.prompt, "summary", null, "", model, "planning");
@@ -488,16 +491,46 @@ async function handleGetPlan(
   }
 
   // Parse the plan result into structured tasks
+  // The agent may wrap JSON in conversation, markdown fences, or tool output.
+  // Try multiple extraction strategies.
   const raw = planTask.result || "";
   try {
-    // Extract JSON from the result (may have surrounding text)
-    let jsonStr = raw.trim();
-    const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
-    if (jsonMatch) jsonStr = jsonMatch[1].trim();
-    const objMatch = jsonStr.match(/\{[\s\S]*\}/);
-    if (objMatch) jsonStr = objMatch[0];
+    let parsed: any = null;
 
-    const parsed = JSON.parse(jsonStr);
+    // Strategy 1: Try parsing the entire output as JSON
+    try {
+      parsed = JSON.parse(raw.trim());
+    } catch {}
+
+    // Strategy 2: Extract from markdown code fences
+    if (!parsed) {
+      const fenceMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (fenceMatch) {
+        try { parsed = JSON.parse(fenceMatch[1].trim()); } catch {}
+      }
+    }
+
+    // Strategy 3: Find the largest JSON object in the text
+    if (!parsed) {
+      const jsonObjects: string[] = [];
+      let depth = 0, start = -1;
+      for (let i = 0; i < raw.length; i++) {
+        if (raw[i] === '{') { if (depth === 0) start = i; depth++; }
+        if (raw[i] === '}') { depth--; if (depth === 0 && start >= 0) { jsonObjects.push(raw.slice(start, i + 1)); start = -1; } }
+      }
+      // Try each JSON object, largest first (most likely to be the full plan)
+      jsonObjects.sort((a, b) => b.length - a.length);
+      for (const candidate of jsonObjects) {
+        try {
+          const obj = JSON.parse(candidate);
+          if (obj.tasks && Array.isArray(obj.tasks)) { parsed = obj; break; }
+        } catch {}
+      }
+    }
+
+    if (!parsed || !parsed.tasks) {
+      throw new Error("No valid JSON with 'tasks' array found in agent output");
+    }
     const plannedTasks = (parsed.tasks || []).map((t: any, i: number) => ({
       id: t.id || `task-${i + 1}`,
       prompt: t.prompt || "",

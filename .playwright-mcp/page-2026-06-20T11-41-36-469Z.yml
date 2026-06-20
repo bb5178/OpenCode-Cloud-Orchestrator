@@ -1,0 +1,721 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2Fsearch&source=header
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e61]:
+    - generic [ref=e64]:
+      - heading "repositories Search Results · claude code parallel agents" [level=1] [ref=e65]
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - region "Filter by" [ref=e70]:
+            - heading "Filter by" [level=2] [ref=e71]
+            - list "Filter by" [ref=e76]:
+              - listitem [ref=e77]:
+                - list [ref=e78]:
+                  - listitem [ref=e79]:
+                    - link "Code (...) results" [ref=e80] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=code
+                      - generic:
+                        - img
+                      - generic [ref=e81]:
+                        - generic [ref=e82]: Code
+                        - generic:
+                          - generic: ...
+                          - generic: (...)
+                          - generic: results
+                  - listitem [ref=e83]:
+                    - link "Repositories results" [ref=e84] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories
+                      - generic:
+                        - img
+                      - generic [ref=e85]:
+                        - generic [ref=e86]: Repositories
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e87]:
+                    - link "Issues results" [ref=e88] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=issues
+                      - generic:
+                        - img
+                      - generic [ref=e89]:
+                        - generic [ref=e90]: Issues
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e91]:
+                    - link "Pull requests results" [ref=e92] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=pullrequests
+                      - generic:
+                        - img
+                      - generic [ref=e93]:
+                        - generic [ref=e94]: Pull requests
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e95]:
+                    - link "Discussions results" [ref=e96] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=discussions
+                      - generic:
+                        - img
+                      - generic [ref=e97]:
+                        - generic [ref=e98]: Discussions
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e99]:
+                    - link "Users results" [ref=e100] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents&type=users
+                      - generic:
+                        - img
+                      - generic [ref=e101]:
+                        - generic [ref=e102]: Users
+                        - generic:
+                          - generic: results
+                  - listitem [ref=e103]:
+                    - button "More" [ref=e104] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic [ref=e106]: More
+              - listitem [ref=e107]
+              - listitem [ref=e108]:
+                - heading "Languages" [level=3] [ref=e110]
+                - list "Languages" [ref=e111]:
+                  - listitem [ref=e112]:
+                    - link "Python" [ref=e113] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3APython&type=repositories&s=stars&o=desc
+                      - generic "Python" [ref=e117]
+                  - listitem [ref=e118]:
+                    - link "Shell" [ref=e119] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3AShell&type=repositories&s=stars&o=desc
+                      - generic "Shell" [ref=e123]
+                  - listitem [ref=e124]:
+                    - link "TypeScript" [ref=e125] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3ATypeScript&type=repositories&s=stars&o=desc
+                      - generic "TypeScript" [ref=e129]
+                  - listitem [ref=e130]:
+                    - link "JavaScript" [ref=e131] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3AJavaScript&type=repositories&s=stars&o=desc
+                      - generic "JavaScript" [ref=e135]
+                  - listitem [ref=e136]:
+                    - link "Go" [ref=e137] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3AGo&type=repositories&s=stars&o=desc
+                      - generic "Go" [ref=e141]
+                  - listitem [ref=e142]:
+                    - link "Rust" [ref=e143] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3ARust&type=repositories&s=stars&o=desc
+                      - generic "Rust" [ref=e147]
+                  - listitem [ref=e148]:
+                    - link "HTML" [ref=e149] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3AHTML&type=repositories&s=stars&o=desc
+                      - generic "HTML" [ref=e153]
+                  - listitem [ref=e154]:
+                    - link "Swift" [ref=e155] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3ASwift&type=repositories&s=stars&o=desc
+                      - generic "Swift" [ref=e159]
+                  - listitem [ref=e160]:
+                    - link "PowerShell" [ref=e161] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3APowerShell&type=repositories&s=stars&o=desc
+                      - generic "PowerShell" [ref=e165]
+                  - listitem [ref=e166]:
+                    - link "C#" [ref=e167] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+language%3AC%23&type=repositories&s=stars&o=desc
+                      - generic "C#" [ref=e171]
+                  - listitem [ref=e172]:
+                    - button "More languages..." [ref=e173] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "More languages..." [ref=e176]
+                  - listitem [ref=e177]
+              - listitem [ref=e178]:
+                - heading "Advanced" [level=3] [ref=e180]
+                - list "Advanced" [ref=e181]:
+                  - listitem [ref=e182]:
+                    - button "Owner" [ref=e183] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Owner" [ref=e187]
+                  - listitem [ref=e188]:
+                    - button "Size" [ref=e189] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Size" [ref=e193]
+                  - listitem [ref=e194]:
+                    - button "Number of followers" [ref=e195] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of followers" [ref=e199]
+                  - listitem [ref=e200]:
+                    - button "Number of forks" [ref=e201] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of forks" [ref=e205]
+                  - listitem [ref=e206]:
+                    - button "Number of stars" [ref=e207] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Number of stars" [ref=e211]
+                  - listitem [ref=e212]:
+                    - button "Date created" [ref=e213] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Date created" [ref=e217]
+                  - listitem [ref=e218]:
+                    - button "Date pushed" [ref=e219] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Date pushed" [ref=e223]
+                  - listitem [ref=e224]:
+                    - button "Topic" [ref=e225] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Topic" [ref=e229]
+                  - listitem [ref=e230]:
+                    - button "License" [ref=e231] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "License" [ref=e235]
+                  - listitem [ref=e236]:
+                    - button "Archived" [ref=e237] [cursor=pointer]:
+                      - generic:
+                        - img
+                      - generic "Archived" [ref=e241]
+                  - listitem [ref=e242]:
+                    - link "Public" [ref=e243] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+is%3Apublic&type=repositories&s=stars&o=desc
+                      - generic:
+                        - img
+                      - generic "Public" [ref=e247]
+                  - listitem [ref=e248]:
+                    - link "Private" [ref=e249] [cursor=pointer]:
+                      - /url: https://github.com/search?q=claude+code+parallel+agents+is%3Aprivate&type=repositories&s=stars&o=desc
+                      - generic:
+                        - img
+                      - generic "Private" [ref=e253]
+              - listitem [ref=e254]
+              - listitem [ref=e255]:
+                - link "Advanced search" [ref=e256] [cursor=pointer]:
+                  - /url: /search/advanced
+                  - generic:
+                    - img
+                  - generic [ref=e258]: Advanced search
+          - slider "Draggable pane splitter" [ref=e260]
+        - generic [ref=e263]:
+          - generic [ref=e264]:
+            - generic [ref=e266]:
+              - generic [ref=e267]:
+                - generic [ref=e268]:
+                  - generic [ref=e269]: 913 results
+                  - generic [ref=e270]: (325 ms)
+                - heading "913 results" [active] [level=2] [ref=e271]
+              - generic [ref=e272]:
+                - 'button "Sort by: Most stars" [ref=e274] [cursor=pointer]':
+                  - generic [ref=e276]: "Sort by: Most stars"
+                  - generic:
+                    - img
+                - button "Open column options" [ref=e278] [cursor=pointer]:
+                  - img [ref=e279]
+            - generic [ref=e283]:
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - heading "AgriciDaniel/claude-ads" [level=3] [ref=e287]:
+                    - link "AgriciDaniel/claude-ads" [ref=e291] [cursor=pointer]:
+                      - /url: /AgriciDaniel/claude-ads
+                      - generic [ref=e292]:
+                        - text: AgriciDaniel/
+                        - emphasis [ref=e293]: claude
+                        - text: "-ads"
+                  - generic [ref=e295]:
+                    - text: Comprehensive paid advertising audit & optimization skill for
+                    - emphasis [ref=e296]: Claude
+                    - emphasis [ref=e297]: Code
+                    - text: . 250+ checks across Google, Meta, YouTube, LinkedIn, TikTok, Mi…
+                  - generic [ref=e298]:
+                    - link "open-source" [ref=e300] [cursor=pointer]:
+                      - /url: /topics/open-source
+                    - link "ai" [ref=e302] [cursor=pointer]:
+                      - /url: /topics/ai
+                    - link "marketing-automation" [ref=e304] [cursor=pointer]:
+                      - /url: /topics/marketing-automation
+                    - link "ai-marketing" [ref=e306] [cursor=pointer]:
+                      - /url: /topics/ai-marketing
+                    - link "claude-code" [ref=e308] [cursor=pointer]:
+                      - /url: /topics/claude-code
+                  - list [ref=e309]:
+                    - listitem [ref=e310]:
+                      - generic "Python language" [ref=e313]: Python
+                    - generic [ref=e314]: ·
+                    - listitem [ref=e315]:
+                      - link "6281 stars" [ref=e316] [cursor=pointer]:
+                        - /url: /AgriciDaniel/claude-ads/stargazers
+                        - img [ref=e317]
+                        - generic [ref=e319]: 6.3k
+                    - generic [ref=e320]: ·
+                    - listitem [ref=e321]:
+                      - generic [ref=e322]:
+                        - text: Updated
+                        - generic "20 Jun 2026, 05:04 GMT+8" [ref=e323]: 14 hours ago
+                - link "Star" [ref=e326] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e327]:
+                    - generic:
+                      - img
+                    - generic [ref=e328]: Star
+              - generic [ref=e330]:
+                - generic [ref=e331]:
+                  - heading "golutra/golutra" [level=3] [ref=e332]:
+                    - link "golutra/golutra" [ref=e336] [cursor=pointer]:
+                      - /url: /golutra/golutra
+                  - generic [ref=e338]:
+                    - text: Multi-
+                    - emphasis [ref=e339]: agent
+                    - text: AI orchestration platform for automation, workflows, and developer tools. Golutra transforms Codex,
+                    - emphasis [ref=e340]: Claude
+                    - emphasis [ref=e341]: Code
+                    - text: ", and OpenClaw…"
+                  - generic [ref=e342]:
+                    - link "desktop-app" [ref=e344] [cursor=pointer]:
+                      - /url: /topics/desktop-app
+                    - link "agent" [ref=e346] [cursor=pointer]:
+                      - /url: /topics/agent
+                    - link "productivity" [ref=e348] [cursor=pointer]:
+                      - /url: /topics/productivity
+                    - link "automation" [ref=e350] [cursor=pointer]:
+                      - /url: /topics/automation
+                    - link "ai" [ref=e352] [cursor=pointer]:
+                      - /url: /topics/ai
+                  - list [ref=e353]:
+                    - listitem [ref=e354]:
+                      - generic "Rust language" [ref=e357]: Rust
+                    - generic [ref=e358]: ·
+                    - listitem [ref=e359]:
+                      - link "3696 stars" [ref=e360] [cursor=pointer]:
+                        - /url: /golutra/golutra/stargazers
+                        - img [ref=e361]
+                        - generic [ref=e363]: 3.7k
+                    - generic [ref=e364]: ·
+                    - listitem [ref=e365]:
+                      - generic [ref=e366]:
+                        - text: Updated
+                        - generic "16 Jun 2026, 22:28 GMT+8" [ref=e367]: 3 days ago
+                - link "Star" [ref=e370] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e371]:
+                    - generic:
+                      - img
+                    - generic [ref=e372]: Star
+              - generic [ref=e374]:
+                - generic [ref=e375]:
+                  - heading "rohitg00/pro-workflow" [level=3] [ref=e376]:
+                    - link "rohitg00/pro-workflow" [ref=e380] [cursor=pointer]:
+                      - /url: /rohitg00/pro-workflow
+                  - generic [ref=e382]:
+                    - emphasis [ref=e383]: Claude
+                    - emphasis [ref=e384]: Code
+                    - text: "learns from your corrections: self-correcting memory that compounds over 50+ sessions. Context engineering,"
+                    - emphasis [ref=e385]: parallel
+                    - text: worktrees,
+                  - generic [ref=e386]:
+                    - link "productivity" [ref=e388] [cursor=pointer]:
+                      - /url: /topics/productivity
+                    - link "hooks" [ref=e390] [cursor=pointer]:
+                      - /url: /topics/hooks
+                    - link "workflow" [ref=e392] [cursor=pointer]:
+                      - /url: /topics/workflow
+                    - link "developer-tools" [ref=e394] [cursor=pointer]:
+                      - /url: /topics/developer-tools
+                    - link "cursor" [ref=e396] [cursor=pointer]:
+                      - /url: /topics/cursor
+                  - list [ref=e397]:
+                    - listitem [ref=e398]:
+                      - generic "JavaScript language" [ref=e401]: JavaScript
+                    - generic [ref=e402]: ·
+                    - listitem [ref=e403]:
+                      - link "2324 stars" [ref=e404] [cursor=pointer]:
+                        - /url: /rohitg00/pro-workflow/stargazers
+                        - img [ref=e405]
+                        - generic [ref=e407]: 2.3k
+                    - generic [ref=e408]: ·
+                    - listitem [ref=e409]:
+                      - generic [ref=e410]:
+                        - text: Updated
+                        - generic "16 Jun 2026, 04:26 GMT+8" [ref=e411]: 4 days ago
+                - link "Star" [ref=e414] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e415]:
+                    - generic:
+                      - img
+                    - generic [ref=e416]: Star
+              - generic [ref=e418]:
+                - generic [ref=e419]:
+                  - heading "zubair-trabzada/ai-legal-claude" [level=3] [ref=e420]:
+                    - link "zubair-trabzada/ai-legal-claude" [ref=e424] [cursor=pointer]:
+                      - /url: /zubair-trabzada/ai-legal-claude
+                      - generic [ref=e425]:
+                        - text: zubair-trabzada/ai-legal-
+                        - emphasis [ref=e426]: claude
+                  - generic [ref=e428]:
+                    - text: AI Legal Assistant skill for
+                    - emphasis [ref=e429]: Claude
+                    - emphasis [ref=e430]: Code
+                    - text: . Contract review, risk analysis, NDA generation, compliance auditing, negotiation strategy, and …
+                  - list [ref=e431]:
+                    - listitem [ref=e432]:
+                      - generic "Python language" [ref=e435]: Python
+                    - generic [ref=e436]: ·
+                    - listitem [ref=e437]:
+                      - link "1467 stars" [ref=e438] [cursor=pointer]:
+                        - /url: /zubair-trabzada/ai-legal-claude/stargazers
+                        - img [ref=e439]
+                        - generic [ref=e441]: 1.5k
+                    - generic [ref=e442]: ·
+                    - listitem [ref=e443]:
+                      - generic [ref=e444]:
+                        - text: Updated
+                        - generic "27 Mar 2026, 10:55 GMT+8" [ref=e445]: on 27 Mar
+                - link "Star" [ref=e448] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e449]:
+                    - generic:
+                      - img
+                    - generic [ref=e450]: Star
+              - generic [ref=e452]:
+                - generic [ref=e453]:
+                  - heading "yohey-w/multi-agent-shogun" [level=3] [ref=e454]:
+                    - link "yohey-w/multi-agent-shogun" [ref=e458] [cursor=pointer]:
+                      - /url: /yohey-w/multi-agent-shogun
+                  - generic [ref=e460]:
+                    - text: Samurai-inspired multi-
+                    - emphasis [ref=e461]: agent
+                    - text: system for
+                    - emphasis [ref=e462]: Claude
+                    - emphasis [ref=e463]: Code
+                    - text: . Orchestrate
+                    - emphasis [ref=e464]: parallel
+                    - text: AI tasks via tmux with shogun → karo → ashigaru hierarchy.
+                  - generic [ref=e465]:
+                    - link "tmux" [ref=e467] [cursor=pointer]:
+                      - /url: /topics/tmux
+                    - link "automation" [ref=e469] [cursor=pointer]:
+                      - /url: /topics/automation
+                    - link "multi-agent" [ref=e471] [cursor=pointer]:
+                      - /url: /topics/multi-agent
+                    - link "shogun" [ref=e473] [cursor=pointer]:
+                      - /url: /topics/shogun
+                    - link "parallel-processing" [ref=e475] [cursor=pointer]:
+                      - /url: /topics/parallel-processing
+                  - list [ref=e476]:
+                    - listitem [ref=e477]:
+                      - generic "Shell language" [ref=e480]: Shell
+                    - generic [ref=e481]: ·
+                    - listitem [ref=e482]:
+                      - link "1344 stars" [ref=e483] [cursor=pointer]:
+                        - /url: /yohey-w/multi-agent-shogun/stargazers
+                        - img [ref=e484]
+                        - generic [ref=e486]: 1.3k
+                    - generic [ref=e487]: ·
+                    - listitem [ref=e488]:
+                      - generic [ref=e489]:
+                        - text: Updated
+                        - generic "6 Jun 2026, 13:09 GMT+8" [ref=e490]: 14 days ago
+                - link "Star" [ref=e493] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e494]:
+                    - generic:
+                      - img
+                    - generic [ref=e495]: Star
+              - generic [ref=e497]:
+                - generic [ref=e498]:
+                  - heading "UditAkhourii/adhd" [level=3] [ref=e499]:
+                    - link "UditAkhourii/adhd" [ref=e503] [cursor=pointer]:
+                      - /url: /UditAkhourii/adhd
+                  - generic [ref=e505]:
+                    - text: ADHD — a skill for
+                    - emphasis [ref=e506]: coding
+                    - emphasis [ref=e507]: agents
+                    - text: . Tree-of-thought with pruning, built on the
+                    - emphasis [ref=e508]: Claude
+                    - text: "& Codex"
+                    - emphasis [ref=e509]: Agent
+                    - text: SDK. Fans out
+                    - emphasis [ref=e510]: parallel
+                    - text: divergent though…
+                  - generic [ref=e511]:
+                    - link "nodejs" [ref=e513] [cursor=pointer]:
+                      - /url: /topics/nodejs
+                    - link "typescript" [ref=e515] [cursor=pointer]:
+                      - /url: /topics/typescript
+                    - link "ai" [ref=e517] [cursor=pointer]:
+                      - /url: /topics/ai
+                    - link "creativity" [ref=e519] [cursor=pointer]:
+                      - /url: /topics/creativity
+                    - link "ideation" [ref=e521] [cursor=pointer]:
+                      - /url: /topics/ideation
+                  - list [ref=e522]:
+                    - listitem [ref=e523]:
+                      - generic "TypeScript language" [ref=e526]: TypeScript
+                    - generic [ref=e527]: ·
+                    - listitem [ref=e528]:
+                      - link "855 stars" [ref=e529] [cursor=pointer]:
+                        - /url: /UditAkhourii/adhd/stargazers
+                        - img [ref=e530]
+                        - generic [ref=e532]: "855"
+                    - generic [ref=e533]: ·
+                    - listitem [ref=e534]:
+                      - generic [ref=e535]:
+                        - text: Updated
+                        - generic "4 Jun 2026, 22:54 GMT+8" [ref=e536]: 15 days ago
+                - link "Star" [ref=e539] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e540]:
+                    - generic:
+                      - img
+                    - generic [ref=e541]: Star
+              - generic [ref=e543]:
+                - generic [ref=e544]:
+                  - heading "Dicklesworthstone/claude_code_agent_farm" [level=3] [ref=e545]:
+                    - link "Dicklesworthstone/claude_code_agent_farm" [ref=e549] [cursor=pointer]:
+                      - /url: /Dicklesworthstone/claude_code_agent_farm
+                      - generic [ref=e550]:
+                        - text: Dicklesworthstone/
+                        - emphasis [ref=e551]: claude
+                        - text: _
+                        - emphasis [ref=e552]: code
+                        - text: _agent_farm
+                  - generic [ref=e554]:
+                    - text: Orchestration framework for running 20+
+                    - emphasis [ref=e555]: Claude
+                    - emphasis [ref=e556]: Code
+                    - emphasis [ref=e557]: agents
+                    - text: in
+                    - emphasis [ref=e558]: parallel
+                    - text: ": automated bug fixing, best-practices sweeps, lock-based coordinat…"
+                  - generic [ref=e559]:
+                    - link "python" [ref=e561] [cursor=pointer]:
+                      - /url: /topics/python
+                    - link "tmux" [ref=e563] [cursor=pointer]:
+                      - /url: /topics/tmux
+                    - link "automation" [ref=e565] [cursor=pointer]:
+                      - /url: /topics/automation
+                    - link "developer-tools" [ref=e567] [cursor=pointer]:
+                      - /url: /topics/developer-tools
+                    - link "ai-agents" [ref=e569] [cursor=pointer]:
+                      - /url: /topics/ai-agents
+                  - list [ref=e570]:
+                    - listitem [ref=e571]:
+                      - generic "Shell language" [ref=e574]: Shell
+                    - generic [ref=e575]: ·
+                    - listitem [ref=e576]:
+                      - link "847 stars" [ref=e577] [cursor=pointer]:
+                        - /url: /Dicklesworthstone/claude_code_agent_farm/stargazers
+                        - img [ref=e578]
+                        - generic [ref=e580]: "847"
+                    - generic [ref=e581]: ·
+                    - listitem [ref=e582]:
+                      - generic [ref=e583]:
+                        - text: Updated
+                        - generic "6 Apr 2026, 08:02 GMT+8" [ref=e584]: on 6 Apr
+                - link "Star" [ref=e587] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e588]:
+                    - generic:
+                      - img
+                    - generic [ref=e589]: Star
+              - generic [ref=e591]:
+                - generic [ref=e592]:
+                  - heading "zubair-trabzada/ai-sales-team-claude" [level=3] [ref=e593]:
+                    - link "zubair-trabzada/ai-sales-team-claude" [ref=e597] [cursor=pointer]:
+                      - /url: /zubair-trabzada/ai-sales-team-claude
+                      - generic [ref=e598]:
+                        - text: zubair-trabzada/ai-sales-team-
+                        - emphasis [ref=e599]: claude
+                  - generic [ref=e601]:
+                    - text: AI-powered sales team for
+                    - emphasis [ref=e602]: Claude
+                    - emphasis [ref=e603]: Code
+                    - text: . Research prospects, qualify leads (BANT + MEDDIC), find decision makers, generate outreach sequenc…
+                  - list [ref=e604]:
+                    - listitem [ref=e605]:
+                      - generic "Python language" [ref=e608]: Python
+                    - generic [ref=e609]: ·
+                    - listitem [ref=e610]:
+                      - link "763 stars" [ref=e611] [cursor=pointer]:
+                        - /url: /zubair-trabzada/ai-sales-team-claude/stargazers
+                        - img [ref=e612]
+                        - generic [ref=e614]: "763"
+                    - generic [ref=e615]: ·
+                    - listitem [ref=e616]:
+                      - generic [ref=e617]:
+                        - text: Updated
+                        - generic "27 Mar 2026, 10:55 GMT+8" [ref=e618]: on 27 Mar
+                - link "Star" [ref=e621] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e622]:
+                    - generic:
+                      - img
+                    - generic [ref=e623]: Star
+              - generic [ref=e625]:
+                - generic [ref=e626]:
+                  - heading "SethGammon/Citadel" [level=3] [ref=e627]:
+                    - link "SethGammon/Citadel" [ref=e631] [cursor=pointer]:
+                      - /url: /SethGammon/Citadel
+                  - generic [ref=e633]:
+                    - text: The operating layer for
+                    - emphasis [ref=e634]: Claude
+                    - emphasis [ref=e635]: Code
+                    - text: "+ OpenAI Codex: persistent project memory, intent routing, safety hooks, cost telemetry, and"
+                    - emphasis [ref=e636]: parallel
+                    - emphasis [ref=e637]: a…
+                  - generic [ref=e638]:
+                    - link "mcp" [ref=e640] [cursor=pointer]:
+                      - /url: /topics/mcp
+                    - link "developer-tools" [ref=e642] [cursor=pointer]:
+                      - /url: /topics/developer-tools
+                    - link "ai-agents" [ref=e644] [cursor=pointer]:
+                      - /url: /topics/ai-agents
+                    - link "agent-orchestration" [ref=e646] [cursor=pointer]:
+                      - /url: /topics/agent-orchestration
+                    - link "agent-workflow" [ref=e648] [cursor=pointer]:
+                      - /url: /topics/agent-workflow
+                  - list [ref=e649]:
+                    - listitem [ref=e650]:
+                      - generic "JavaScript language" [ref=e653]: JavaScript
+                    - generic [ref=e654]: ·
+                    - listitem [ref=e655]:
+                      - link "613 stars" [ref=e656] [cursor=pointer]:
+                        - /url: /SethGammon/Citadel/stargazers
+                        - img [ref=e657]
+                        - generic [ref=e659]: "613"
+                    - generic [ref=e660]: ·
+                    - listitem [ref=e661]:
+                      - generic [ref=e662]:
+                        - text: Updated
+                        - generic "19 Jun 2026, 21:43 GMT+8" [ref=e663]: 21 hours ago
+                - link "Star" [ref=e666] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e667]:
+                    - generic:
+                      - img
+                    - generic [ref=e668]: Star
+              - generic [ref=e670]:
+                - generic [ref=e671]:
+                  - heading "bradAGI/awesome-cli-coding-agents" [level=3] [ref=e672]:
+                    - link "bradAGI/awesome-cli-coding-agents" [ref=e676] [cursor=pointer]:
+                      - /url: /bradAGI/awesome-cli-coding-agents
+                      - generic [ref=e677]:
+                        - text: bradAGI/awesome-cli-coding-
+                        - emphasis [ref=e678]: agents
+                  - generic [ref=e680]:
+                    - text: Curated directory of terminal-native AI
+                    - emphasis [ref=e681]: coding
+                    - emphasis [ref=e682]: agents
+                    - text: and the harnesses that orchestrate them. Covers open-source tools (Pi, OpenCode, Ai…
+                  - list [ref=e683]:
+                    - listitem [ref=e684]:
+                      - generic "Python language" [ref=e687]: Python
+                    - generic [ref=e688]: ·
+                    - listitem [ref=e689]:
+                      - link "598 stars" [ref=e690] [cursor=pointer]:
+                        - /url: /bradAGI/awesome-cli-coding-agents/stargazers
+                        - img [ref=e691]
+                        - generic [ref=e693]: "598"
+                    - generic [ref=e694]: ·
+                    - listitem [ref=e695]:
+                      - generic [ref=e696]:
+                        - text: Updated
+                        - generic "17 Jun 2026, 23:23 GMT+8" [ref=e697]: 2 days ago
+                - link "Star" [ref=e700] [cursor=pointer]:
+                  - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fsearch%3Fq%3Dclaude%2Bcode%2Bparallel%2Bagents%26type%3Drepositories%26s%3Dstars%26o%3Ddesc
+                  - generic [ref=e701]:
+                    - generic:
+                      - img
+                    - generic [ref=e702]: Star
+            - navigation "Pagination" [ref=e705]:
+              - generic [ref=e706]:
+                - generic [ref=e707]:
+                  - img [ref=e708]
+                  - text: Previous
+                - link "Page 1" [ref=e710] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=1
+                  - text: "1"
+                - link "Page 2" [ref=e711] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=2
+                  - text: "2"
+                - link "Page 3" [ref=e712] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=3
+                  - text: "3"
+                - link "Page 4" [ref=e713] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=4
+                  - text: "4"
+                - link "Page 5" [ref=e714] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=5
+                  - text: "5"
+                - link "Page 6" [ref=e715] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=6
+                  - text: "6"
+                - link "Page 7..." [ref=e716] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=7
+                  - text: "7"
+                - text: …
+                - link "Page 92" [ref=e717] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=92
+                  - text: "92"
+                - link "Next Page" [ref=e718] [cursor=pointer]:
+                  - /url: https://github.com/search?q=claude+code+parallel+agents&type=repositories&s=stars&o=desc&p=2
+                  - text: Next
+                  - img [ref=e719]
+          - generic [ref=e722]:
+            - generic [ref=e723]:
+              - img "Package icon" [ref=e725]
+              - heading "Sponsor open source projects you depend on" [level=2] [ref=e726]
+              - generic [ref=e727]: Contributors are working behind the scenes to make open source better for everyone—give them the help and recognition they deserve.
+              - link "Explore sponsorable projects" [ref=e728] [cursor=pointer]:
+                - /url: https://github.com/sponsors/explore
+                - text: Explore sponsorable projects
+                - img [ref=e729]
+            - generic [ref=e731]:
+              - generic [ref=e732]:
+                - img [ref=e733]
+                - text: ProTip!
+              - generic [ref=e735]:
+                - text: Press the
+                - generic [ref=e736]: /
+                - text: key to activate the search input again and adjust your query.
