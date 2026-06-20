@@ -148,15 +148,37 @@ function getIdleServer() {
 // Track local failure history for prompt rewriting
 const failureHistory = {};  // taskId -> { count, errors[] }
 
-function getRetryGuidance(taskId) {
-  const history = failureHistory[taskId];
-  if (!history || history.count < 2) return "";
+async function getRetryGuidance(taskId) {
+  // Check local history first
+  const local = failureHistory[taskId];
+  let failCount = local?.count || 0;
+  let errors = local?.errors || [];
+
+  // Also fetch server-side event log for failures (survives runner restarts)
+  try {
+    const jobId = taskId.split("/").slice(0, -1).join("/");
+    const data = await ocoFetch(`/api/job/${jobId}/events`);
+    const taskEvents = (data.events || []).filter(
+      (e) => e.task_id === taskId && (e.event_type === "task_failed" || e.event_type === "task_retried")
+    );
+    const serverFailCount = taskEvents.filter((e) => e.event_type === "task_failed").length;
+    if (serverFailCount > failCount) {
+      failCount = serverFailCount;
+      // Extract error messages from server events
+      errors = taskEvents
+        .filter((e) => e.event_type === "task_failed" && e.message)
+        .map((e) => e.message.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").slice(0, 150))
+        .slice(-5);
+    }
+  } catch {}
+
+  if (failCount < 2) return "";
 
   const guidance = [
-    "\n\n--- RETRY GUIDANCE (this task has failed " + history.count + " times) ---",
+    "\n\n--- RETRY GUIDANCE (this task has failed " + failCount + " times) ---",
     "Previous attempts failed with these errors:",
   ];
-  for (const err of history.errors.slice(-3)) {
+  for (const err of errors.slice(-5)) {
     guidance.push("  - " + err);
   }
   guidance.push("");
@@ -166,6 +188,7 @@ function getRetryGuidance(taskId) {
   guidance.push("- Prefer APIs over web page scraping (e.g., use peeringdb.com/api/ not the web UI).");
   guidance.push("- If you cannot get the data from the internet, produce the best answer you can from your training knowledge.");
   guidance.push("- Produce a result even if incomplete — a partial result is better than another timeout.");
+  guidance.push("- Do NOT repeat the same approach that failed before.");
   guidance.push("--- End retry guidance ---");
 
   return guidance.join("\n");
@@ -183,8 +206,8 @@ async function executeTask(server, task) {
   // Build prompt with context
   let prompt = task.prompt;
 
-  // Add retry guidance if this task has failed before
-  const retryGuidance = getRetryGuidance(task.id);
+  // Add retry guidance if this task has failed before (checks server-side event log)
+  const retryGuidance = await getRetryGuidance(task.id);
   if (retryGuidance) {
     prompt += retryGuidance;
   }
