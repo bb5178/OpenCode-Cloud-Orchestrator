@@ -383,12 +383,20 @@ export async function retryTask(db: D1Database, taskId: string): Promise<boolean
   const result = await db
     .prepare(
       `UPDATE tasks SET status = 'queued', claimed_by = NULL, claimed_at = NULL, started_at = NULL, 
-       retry_count = retry_count + 1, updated_at = ?, error = NULL, progress = NULL
+       completed_at = NULL, retry_count = retry_count + 1, updated_at = ?, error = NULL, progress = NULL
        WHERE id = ? AND retry_count < max_retries`
     )
     .bind(now, taskId)
     .run();
   return (result.meta?.changes ?? 0) > 0;
+}
+
+export async function resetRetryCount(db: D1Database, taskId: string): Promise<void> {
+  const now = Math.floor(Date.now() / 1000);
+  await db
+    .prepare(`UPDATE tasks SET retry_count = 0, updated_at = ? WHERE id = ?`)
+    .bind(now, taskId)
+    .run();
 }
 
 // ----- Helpers -----

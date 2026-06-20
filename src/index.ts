@@ -447,18 +447,33 @@ async function handleJobAction(
     }
 
     case "retry_stalled": {
+      // If job is stopped, resume it first so retried tasks can be polled
+      if (job.status === "stopped" || job.status === "failed") {
+        await db.updateJobStatus(env.DB, jobId, "running");
+        await db.logEvent(env.DB, jobId, null, "job_resumed", "Job resumed for task retry");
+      }
+
       const tasks = await db.getTasksByJob(env.DB, jobId);
-      const stalled = tasks.filter((t) => t.status === "stalled" || t.status === "failed");
+      const failedTasks = tasks.filter((t) => t.status === "stalled" || t.status === "failed");
       let retried = 0;
-      for (const t of stalled) {
+      for (const t of failedTasks) {
+        // Reset retry count if exhausted, then retry
+        await db.resetRetryCount(env.DB, t.id);
         const ok = await db.retryTask(env.DB, t.id);
         if (ok) {
           retried++;
-          await db.logEvent(env.DB, jobId, t.id, "task_retried",
-            `Retry ${t.retry_count + 1}/${t.max_retries}`);
+          await db.logEvent(env.DB, jobId, t.id, "task_retried", "Manual retry via dashboard");
+          await env.TASK_QUEUE.put(`queued:${t.id}`, t.id);
         }
       }
-      return json({ ok: true, retriedCount: retried }, 200, headers);
+
+      // Also advance DAG in case pending tasks now have deps met
+      const queued = await advanceDag(env, jobId);
+      for (const qId of queued) {
+        await db.logEvent(env.DB, jobId, qId, "task_queued", "Queued after retry");
+      }
+
+      return json({ ok: true, retriedCount: retried, newlyQueued: queued, status: "running" }, 200, headers);
     }
 
     default:
