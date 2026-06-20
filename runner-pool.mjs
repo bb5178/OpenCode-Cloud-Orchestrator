@@ -363,31 +363,34 @@ async function main() {
   // Wait for servers to warm up
   await sleep(SERVER_WARMUP_MS + 1000);
 
-  // Poll loop — burst-poll when idle servers are available
+  // Poll loop — fill all idle servers in one burst
   while (!shuttingDown) {
     try {
-      const idle = getIdleServer();
-      if (!idle) {
+      const idleServers = servers.filter((s) => s.status === "idle");
+      if (idleServers.length === 0) {
         await sleep(500);
         continue;
       }
 
-      const response = await poll();
-      if (!response.task) {
+      // Burst: poll once per idle server, in parallel
+      const pollPromises = idleServers.map(() => poll().catch(() => ({ task: null })));
+      const results = await Promise.all(pollPromises);
+
+      let assigned = 0;
+      for (const response of results) {
+        if (!response.task) continue;
+        const idle = getIdleServer();
+        if (!idle) break;
+        executeTask(idle, response.task);
+        assigned++;
+      }
+
+      if (assigned === 0) {
         // No tasks available — slow poll
         await sleep(POLL_INTERVAL);
-        continue;
-      }
-
-      // Execute (non-blocking)
-      executeTask(idle, response.task);
-
-      // If more idle servers, immediately poll again (burst mode)
-      const nextIdle = getIdleServer();
-      if (nextIdle) {
-        await sleep(100); // tiny delay to avoid hammering
       } else {
-        await sleep(500);
+        // Got tasks — quick check for more
+        await sleep(200);
       }
     } catch (err) {
       await sleep(POLL_INTERVAL);
