@@ -92,8 +92,9 @@ function startServer(id) {
     output: "",
   };
 
-  const proc = spawn("opencode", ["serve", "--port", String(port), "--dir", WORK_DIR], {
+  const proc = spawn("opencode", ["serve", "--port", String(port)], {
     stdio: ["ignore", "pipe", "pipe"],
+    cwd: WORK_DIR,
     env: { ...process.env },
   });
 
