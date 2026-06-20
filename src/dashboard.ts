@@ -188,6 +188,11 @@ export function renderDashboard(): string {
     .md-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
     .md-content img { max-width: 100%; border-radius: 8px; }
 
+    /* ── Copy icon ── */
+    .copy-icon { cursor: pointer; color: var(--muted); font-size: 13px; margin-left: 6px;
+                 opacity: 0.5; transition: opacity 0.2s; }
+    .copy-icon:hover { opacity: 1; color: var(--accent); }
+
     /* ── Model tag ── */
     .model-tag { font-family: monospace; font-size: 10px; color: var(--orange);
                  background: rgba(240, 136, 62, 0.1); border: 1px solid rgba(240, 136, 62, 0.2);
@@ -614,7 +619,7 @@ export function renderDashboard(): string {
           + '<div class="job-header" onclick="toggle(\\'' + j.id + '\\')">'
           + '<div class="job-top"><div style="flex:1;min-width:0">'
           + '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;flex-wrap:wrap">'
-          + '<span class="job-id">' + j.id + '</span>'
+          + '<span class="job-id">' + j.id + '</span><span class="copy-icon" onclick="copyJobId(\\'' + j.id + '\\',event)" title="Copy job ID">&#x2398;</span>'
           + '<span class="badge badge-' + j.status + '">' + j.status + '</span>' + jobBadgeExtra
           + '<span style="font-size:12px;color:var(--muted)">' + cDone + '/' + cTotal + ' tasks'
           + (cFailed > 0 ? ' <span style="color:var(--red)">' + cFailed + ' failed</span>' : '')
@@ -885,6 +890,16 @@ export function renderDashboard(): string {
       } catch (err) {
         alert('Submit failed: ' + err.message);
       }
+    }
+
+    async function copyJobId(jobId, e) {
+      if (e) e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(jobId);
+        const icon = e.target;
+        icon.textContent = '\u2713';
+        setTimeout(() => icon.textContent = '\u2398', 1500);
+      } catch {}
     }
 
     loadBoard();
