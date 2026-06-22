@@ -627,7 +627,7 @@ export function renderDashboard(): string {
           + (j.model ? '<span class="model-tag">' + esc(j.model) + '</span>' : '')
           + (jobDur ? '<span style="font-size:11px;color:var(--muted);font-family:monospace">' + jobDur + '</span>' : '')
           + '</div>'
-          + '<div class="job-prompt">' + esc(j.original_prompt || '') + '</div>'
+          + '<div class="job-prompt">' + esc(j.original_prompt || '') + ' <span class="copy-icon" onclick="copyPrompt(this,event)" data-prompt="' + esc(j.original_prompt || '').replace(/"/g, '&amp;quot;') + '" title="Copy prompt">&#x2398;</span></div>'
           + '<div class="progress-bar"><div class="progress-fill ' + barClass + '" style="width:' + pct + '%"></div></div>'
           + '<div class="job-times">'
           + timeTag('Created', j.created_at)
@@ -899,6 +899,16 @@ export function renderDashboard(): string {
         const icon = e.target;
         icon.textContent = '\u2713';
         setTimeout(() => icon.textContent = '\u2398', 1500);
+      } catch {}
+    }
+
+    async function copyPrompt(el, e) {
+      if (e) e.stopPropagation();
+      try {
+        const text = el.getAttribute('data-prompt');
+        await navigator.clipboard.writeText(text);
+        el.textContent = '\u2713';
+        setTimeout(() => el.textContent = '\u2398', 1500);
       } catch {}
     }
 
