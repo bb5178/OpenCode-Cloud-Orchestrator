@@ -75,7 +75,7 @@ export interface PlanJobRequest {
   prompt: string;
   model?: string;        // model for task execution (default: opus)
   taskModel?: string;    // override model per-task (default: same as job model)
-  useRunner?: boolean;   // if true, use runner-based planning instead of Workers AI (slower but has project context)
+
 }
 
 export interface SubmitJobRequest {

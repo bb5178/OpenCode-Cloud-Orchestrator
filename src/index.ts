@@ -152,37 +152,9 @@ async function handlePlanJob(
 
   const planId = `plan-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const model = body.model || "anthropic/claude-opus-4-6";
-  const useRunnerPlanning = body.useRunner === true;
 
-  // ── Fast path: Workers AI planning (default) ──
-  // Direct API call to Workers AI — no tools, no AGENTS.md, no narration.
-  // Produces clean JSON reliably. Falls back to runner path on failure.
-  if (!useRunnerPlanning) {
-    try {
-      console.log(`[plan] Using Workers AI for planning: ${body.prompt.slice(0, 100)}`);
-      const plan = await planJob(env.AI, body.prompt);
-
-      return json({
-        planId,
-        status: "completed",
-        prompt: body.prompt,
-        model: "workers-ai/llama-3.3-70b",
-        tasks: plan.tasks.map((t, i) => ({
-          id: t.id || `task-${i + 1}`,
-          prompt: t.prompt || "",
-          dependencies: Array.isArray(t.dependencies) ? t.dependencies : [],
-        })),
-        rollup: plan.rollup,
-      }, 200, headers);
-    } catch (err) {
-      console.log(`[plan] Workers AI planning failed: ${err}. Falling back to runner.`);
-      // Fall through to runner-based planning
-    }
-  }
-
-  // ── Slow path: Runner-based planning ──
-  // Sends a plan task to the runner pool. The runner executes it via OpenCode
-  // which has full project context but may narrate and use tools.
+  // Runner-based planning — runs through OpenCode with full project context
+  // (AGENTS.md, KB, MCP tools) for context-aware task decomposition.
   const planPrompt = `You are a task planner for an orchestration system called OCO. Given the user request below, decompose it into discrete tasks with dependencies.
 
 USER REQUEST:

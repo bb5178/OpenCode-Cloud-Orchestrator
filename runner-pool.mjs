@@ -13,7 +13,7 @@
 import { spawn, execSync } from "node:child_process";
 import { hostname } from "node:os";
 
-const VERSION = "1.2.0";  // --format json result capture, hardened planning + synthesis prompts, 5min watchdog
+const VERSION = "1.4.0";  // stderr capture for --attach mode, reverted Workers AI planning
 
 // ── Config ──
 
@@ -303,7 +303,15 @@ async function executeTask(server, task) {
         server._bytesTotal = (server._bytesTotal || 0) + d.length;
         server.lastActivity = Date.now();
       });
-      child.stderr.on("data", (d) => { stderr += d.toString(); server._bytesTotal = (server._bytesTotal || 0) + d.length; server.lastActivity = Date.now(); });
+      child.stderr.on("data", (d) => {
+        const chunk = d.toString();
+        stderr += chunk;
+        // Also feed stderr into stdout — with --attach, opencode may route
+        // JSON events (including text parts) to stderr in some edge cases
+        stdout += chunk;
+        server._bytesTotal = (server._bytesTotal || 0) + d.length;
+        server.lastActivity = Date.now();
+      });
 
       child.on("close", (code) => {
         clearTimeout(timeoutTimer);

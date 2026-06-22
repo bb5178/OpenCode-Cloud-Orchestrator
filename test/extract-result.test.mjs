@@ -83,6 +83,29 @@ const TEXT_WITH_EMPTY_STRING = [
   '{"type":"text","timestamp":2,"sessionID":"s1","part":{"type":"text","text":"Actual content here."}}',
 ].join("\n");
 
+// Simulates merged stdout+stderr when --attach routes some output to stderr.
+// ANSI tool output lines from stderr are interleaved with JSON events from stdout.
+const MERGED_STDOUT_STDERR = [
+  '{"type":"step_start","timestamp":1,"sessionID":"s1","part":{"type":"step-start"}}',
+  '\x1b[0m',
+  '> build \u00b7 claude-opus-4-6',
+  '\x1b[0m',
+  '\x1b[0m\u2699 \x1b[0mapple-notes_search_notes {"query":"[KB]"}',
+  '{"type":"tool_use","timestamp":2,"sessionID":"s1","part":{"type":"tool","tool":"apple-notes_search_notes"}}',
+  '\x1b[0m\u2192 \x1b[0mRead /Users/test/AGENTS.md',
+  '{"type":"text","timestamp":3,"sessionID":"s1","part":{"type":"text","text":"Based on my research, here are the findings."}}',
+  '{"type":"step_finish","timestamp":4,"sessionID":"s1","part":{"type":"step-finish","reason":"stop"}}',
+].join("\n");
+
+// Simulates the case where ALL output comes from stderr (stdout empty)
+const ALL_STDERR_OUTPUT = [
+  '\x1b[0m',
+  '> build \u00b7 claude-opus-4-6',
+  '\x1b[0m',
+  '\x1b[0m\u2699 \x1b[0mapple-notes_get_note {"title":"[KB] OCO"}',
+  '{"type":"text","timestamp":1,"sessionID":"s1","part":{"type":"text","text":"Here is the plan: {\\"tasks\\":[{\\"id\\":\\"t1\\",\\"prompt\\":\\"Do research\\",\\"dependencies\\":[]}],\\"rollup\\":{\\"strategy\\":\\"summary\\",\\"instruction\\":\\"Combine\\"}}"}}',
+].join("\n");
+
 // ── Tests ──
 
 describe("extractJsonResult (runner-pool.mjs)", () => {
@@ -144,6 +167,20 @@ describe("extractJsonResult (runner-pool.mjs)", () => {
   it("filters out empty text parts", () => {
     const result = extractJsonResult(TEXT_WITH_EMPTY_STRING);
     assert.equal(result, "Actual content here.");
+  });
+});
+
+describe("extractJsonResult — merged stdout+stderr (--attach mode)", () => {
+  it("extracts text from mixed ANSI stderr + JSON stdout lines", () => {
+    const result = extractJsonResult(MERGED_STDOUT_STDERR);
+    assert.ok(result.includes("Based on my research"));
+    assert.ok(!result.includes("AGENTS.md"));  // ANSI lines should be skipped
+  });
+
+  it("extracts text when all output comes from stderr", () => {
+    const result = extractJsonResult(ALL_STDERR_OUTPUT);
+    assert.ok(result !== null);
+    assert.ok(result.includes("Here is the plan"));
   });
 });
 

@@ -21,7 +21,7 @@
 import { spawn } from "node:child_process";
 import { hostname } from "node:os";
 
-const VERSION = "1.2.0";  // --format json result capture, hardened synthesis prompt
+const VERSION = "1.4.0";  // stderr capture for --attach mode, reverted Workers AI planning
 
 // ── Config ──
 
@@ -161,7 +161,11 @@ function executeTask(task) {
     });
 
     child.stderr.on("data", (data) => {
-      stderr += data.toString();
+      const chunk = data.toString();
+      stderr += chunk;
+      // Also feed stderr into stdout — with --attach, opencode may route
+      // JSON events to stderr in some edge cases
+      stdout += chunk;
     });
 
     child.on("close", (code) => {
