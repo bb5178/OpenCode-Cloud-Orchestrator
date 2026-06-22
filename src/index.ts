@@ -582,7 +582,8 @@ async function handleGetPlan(
     };
 
     // Clean up the plan job (it served its purpose)
-    await db.deleteJob(env.DB, planId);
+    // Wrapped in try-catch: cleanup failure should not prevent returning the parsed plan
+    try { await db.deleteJob(env.DB, planId); } catch (e) { console.log(`[plan-parse] Cleanup warning: ${e}`); }
 
     return json({
       planId,
