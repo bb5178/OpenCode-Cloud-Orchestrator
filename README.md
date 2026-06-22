@@ -2,7 +2,7 @@
 
 A cloud-based job orchestrator for [OpenCode](https://opencode.ai) that decomposes prompts into parallel tasks with dependency management, distributes execution across multiple machines, and collects results — all with a real-time dashboard.
 
-**Built entirely on Cloudflare:** Workers + Workflows + D1 + KV + Workers AI + Access.
+**Built entirely on Cloudflare:** Workers + Workflows + D1 + KV + Access.
 
 ## The Problem
 
@@ -57,7 +57,7 @@ AI coding agents (OpenCode, Claude Code, Codex, Aider) can only handle one task 
 - **Multi-machine execution** — run multiple runners on different machines, tasks distribute automatically
 - **Job lifecycle** — pause, resume, stop, restart, delete
 - **Event log** — full audit trail of every state change
-- **Watchdog** — detects stalled tasks (30 min no update), auto-retries or marks as stalled
+- **Watchdog** — detects stalled tasks (5 min no activity), auto-retries or marks as stalled
 - **Result synthesis** — auto-appended final task merges all results into a polished markdown document
 - **Markdown rendering** — results rendered as formatted GitHub-Flavored Markdown in the dashboard
 - **Generation guards** — prevents zombie processes from corrupting restarted jobs
@@ -81,7 +81,7 @@ chmod +x run-pool.sh
 ```
 
 ```
- OCO Pool Runner                                    20:30:26  Up: 4m  Done: 5  Failed: 0
+ OCO Pool Runner v1.2.0                             20:30:26  Up: 4m  Done: 5  Failed: 0
  Servers: 4 active │ 2 idle │ 0 starting │ 0 crashed  │  Pool: 6
 ────────────────────────────────────────────────────────────────────────────────────
  ID  PORT   STATUS      PID     TASKS  ELAPSED   TASK / OUTPUT
@@ -257,6 +257,21 @@ OCO executes prompts on your local machine via `opencode run --dangerously-skip-
 | `GET` | `/api/board` | All jobs for dashboard |
 | `POST` | `/api/watchdog` | Run stall detection |
 
+## Testing
+
+OCO includes a test suite covering result extraction and plan parsing:
+
+```bash
+npm test    # runs 26 tests
+```
+
+| Suite | Tests | Coverage |
+|-------|-------|----------|
+| `extract-result.test.mjs` | 14 | JSON result extraction, multi-part text, narration handling, regression tests |
+| `plan-parsing.test.mjs` | 12 | Plan JSON parsing (raw, markdown fences, brace matching), end-to-end pipeline |
+
+Run tests before committing changes to the runners or planning logic.
+
 ## Architecture
 
 | Component | Cloudflare Primitive |
@@ -287,6 +302,9 @@ oco/
 │   ├── 0001_init.sql     # Core schema: jobs + tasks
 │   ├── 0002_advanced.sql # Event log, job results, lifecycle columns
 │   └── 0003_model_generation.sql  # Model + generation columns
+├── test/
+│   ├── extract-result.test.mjs  # Result extraction tests
+│   └── plan-parsing.test.mjs    # Plan JSON parsing tests
 ├── runner.mjs            # Cold runner (spawns opencode run per task)
 ├── runner-pool.mjs       # Pool runner (warm opencode serve + htop TUI)
 ├── run.example.sh        # Cold runner wrapper template
