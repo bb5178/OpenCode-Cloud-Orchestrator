@@ -7,10 +7,25 @@ import assert from "node:assert/strict";
 function parsePlanOutput(raw) {
   let parsed = null;
 
+  // Strategy 0: Multi-part text — try each \n\n-separated block as JSON (last first)
+  if (!parsed) {
+    const blocks = raw.split("\n\n");
+    for (let i = blocks.length - 1; i >= 0; i--) {
+      const block = blocks[i].trim();
+      if (!block.startsWith("{")) continue;
+      try {
+        const obj = JSON.parse(block);
+        if (obj.tasks && Array.isArray(obj.tasks)) { parsed = obj; break; }
+      } catch {}
+    }
+  }
+
   // Strategy 1: Try parsing the entire output as JSON
-  try {
-    parsed = JSON.parse(raw.trim());
-  } catch {}
+  if (!parsed) {
+    try {
+      parsed = JSON.parse(raw.trim());
+    } catch {}
+  }
 
   // Strategy 2: Extract from markdown code fences
   if (!parsed) {
@@ -91,11 +106,56 @@ const DEEPLY_NESTED_JSON = JSON.stringify({
   rollup: { strategy: "summary", instruction: "Combine results" },
 });
 
+// Strategy 0 test data — multi-part text from extractJsonResult
+const MULTIPART_NARRATION_THEN_JSON = [
+  "I'll decompose this into parallel research tasks for each AI agent.",
+  "",
+  "Let me think about the dependencies and structure.",
+  "",
+  CLEAN_JSON,
+].join("\n\n");
+
+const MULTIPART_NARRATION_ONLY = [
+  "I'll decompose this into parallel research tasks.",
+  "",
+  "Let me check the KB for context first.",
+  "",
+  "I found some relevant notes. Now planning the tasks.",
+].join("\n\n");
+
+const MULTIPART_JSON_IN_MIDDLE = [
+  "Here's my plan:",
+  "",
+  CLEAN_JSON,
+  "",
+  "I think this covers everything.",
+].join("\n\n");
+
 const EMPTY_STRING = "";
 const PURE_NARRATION = "I'll research these AI agents and create a comparison. Let me start by looking at each one.";
 const NO_TASKS_ARRAY = '{"rollup": {"strategy": "summary"}, "items": [1, 2, 3]}';
 
 // ── Tests ──
+
+describe("parsePlanOutput — Strategy 0: multi-part text blocks", () => {
+  it("finds JSON plan in last block after narration", () => {
+    const result = parsePlanOutput(MULTIPART_NARRATION_THEN_JSON);
+    assert.equal(result.tasks.length, 3);
+    assert.equal(result.tasks[0].id, "research-hermes");
+  });
+
+  it("finds JSON plan in middle block surrounded by narration", () => {
+    const result = parsePlanOutput(MULTIPART_JSON_IN_MIDDLE);
+    assert.equal(result.tasks.length, 3);
+  });
+
+  it("falls through to other strategies when no JSON blocks exist", () => {
+    assert.throws(
+      () => parsePlanOutput(MULTIPART_NARRATION_ONLY),
+      /No valid JSON with 'tasks' array found/
+    );
+  });
+});
 
 describe("parsePlanOutput — Strategy 1: raw JSON", () => {
   it("parses clean JSON directly", () => {

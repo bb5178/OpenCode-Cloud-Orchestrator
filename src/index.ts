@@ -152,9 +152,37 @@ async function handlePlanJob(
 
   const planId = `plan-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const model = body.model || "anthropic/claude-opus-4-6";
+  const useRunnerPlanning = body.useRunner === true;
 
-  // Create a plan job — a single task that runs locally via the runner
-  // with full OpenCode context (AGENTS.md, codebase, tools)
+  // ── Fast path: Workers AI planning (default) ──
+  // Direct API call to Workers AI — no tools, no AGENTS.md, no narration.
+  // Produces clean JSON reliably. Falls back to runner path on failure.
+  if (!useRunnerPlanning) {
+    try {
+      console.log(`[plan] Using Workers AI for planning: ${body.prompt.slice(0, 100)}`);
+      const plan = await planJob(env.AI, body.prompt);
+
+      return json({
+        planId,
+        status: "completed",
+        prompt: body.prompt,
+        model: "workers-ai/llama-3.3-70b",
+        tasks: plan.tasks.map((t, i) => ({
+          id: t.id || `task-${i + 1}`,
+          prompt: t.prompt || "",
+          dependencies: Array.isArray(t.dependencies) ? t.dependencies : [],
+        })),
+        rollup: plan.rollup,
+      }, 200, headers);
+    } catch (err) {
+      console.log(`[plan] Workers AI planning failed: ${err}. Falling back to runner.`);
+      // Fall through to runner-based planning
+    }
+  }
+
+  // ── Slow path: Runner-based planning ──
+  // Sends a plan task to the runner pool. The runner executes it via OpenCode
+  // which has full project context but may narrate and use tools.
   const planPrompt = `You are a task planner for an orchestration system called OCO. Given the user request below, decompose it into discrete tasks with dependencies.
 
 USER REQUEST:
@@ -167,7 +195,6 @@ PLANNING RULES:
 4. Maximize parallelism — tasks with no data dependency should NOT depend on each other.
 5. Aim for 3-20 tasks depending on complexity.
 6. Each task prompt must be detailed and specific enough for an AI agent to execute without ambiguity.
-7. Consider the local project context when planning — what files exist, what tools are available.
 
 CRITICAL CONSTRAINTS:
 - DO NOT call oco_submit_job or any OCO tools. You are ONLY planning, not executing.
@@ -509,16 +536,36 @@ async function handleGetPlan(
   }
 
   // Parse the plan result into structured tasks
-  // The agent may wrap JSON in conversation, markdown fences, or tool output.
-  // Try multiple extraction strategies.
+  // The agent output may contain narration, markdown fences, or raw JSON.
+  // With --format json, extractJsonResult() concatenates all text parts with \n\n,
+  // so the result may be: "narration\n\nmore narration\n\n{actual JSON}"
+  // Try multiple extraction strategies in order of reliability.
   const raw = planTask.result || "";
+  console.log(`[plan-parse] Raw result length: ${raw.length}, preview: ${raw.slice(0, 200)}`);
   try {
     let parsed: any = null;
 
+    // Strategy 0: Multi-part text — try each \n\n-separated block as JSON
+    // This handles the common case where extractJsonResult concatenated
+    // narration + JSON plan into one string separated by \n\n
+    if (!parsed) {
+      const blocks = raw.split("\n\n");
+      for (let i = blocks.length - 1; i >= 0; i--) {
+        const block = blocks[i].trim();
+        if (!block.startsWith("{")) continue;
+        try {
+          const obj = JSON.parse(block);
+          if (obj.tasks && Array.isArray(obj.tasks)) { parsed = obj; break; }
+        } catch {}
+      }
+    }
+
     // Strategy 1: Try parsing the entire output as JSON
-    try {
-      parsed = JSON.parse(raw.trim());
-    } catch {}
+    if (!parsed) {
+      try {
+        parsed = JSON.parse(raw.trim());
+      } catch {}
+    }
 
     // Strategy 2: Extract from markdown code fences
     if (!parsed) {
@@ -528,7 +575,7 @@ async function handleGetPlan(
       }
     }
 
-    // Strategy 3: Find the largest JSON object in the text
+    // Strategy 3: Find the largest JSON object in the text via brace matching
     if (!parsed) {
       const jsonObjects: string[] = [];
       let depth = 0, start = -1;
@@ -547,8 +594,10 @@ async function handleGetPlan(
     }
 
     if (!parsed || !parsed.tasks) {
+      console.log(`[plan-parse] FAILED. Raw tail: ${raw.slice(-500)}`);
       throw new Error("No valid JSON with 'tasks' array found in agent output");
     }
+    console.log(`[plan-parse] SUCCESS. Found ${parsed.tasks.length} tasks.`);
     const plannedTasks = (parsed.tasks || []).map((t: any, i: number) => ({
       id: t.id || `task-${i + 1}`,
       prompt: t.prompt || "",
