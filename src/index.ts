@@ -172,11 +172,11 @@ PLANNING RULES:
 CRITICAL CONSTRAINTS:
 - DO NOT call oco_submit_job or any OCO tools. You are ONLY planning, not executing.
 - DO NOT actually execute the tasks yourself. Just plan them.
-- DO NOT use any tools except for reading files or searching if needed for context.
-- Your FINAL output must be ONLY a JSON object. No explanation, no markdown fences, no commentary.
+- DO NOT use any tools. Do NOT read files, search, or browse. Plan based on the request alone.
+- Respond with ONLY a JSON object. No explanation before it. No commentary after it. No markdown fences. Just raw JSON.
 - Format: {"tasks":[{"id":"task-id","prompt":"Detailed instruction","dependencies":[]}],"rollup":{"strategy":"summary","instruction":"How to combine results"}}
 
-After you have gathered enough context to plan well, output ONLY the JSON object as your final response.`;
+IMPORTANT: Your entire response must be parseable as JSON. Do NOT write any text before or after the JSON object. Do NOT narrate your thinking. Output the JSON immediately.`;
 
   // Create a lightweight plan job in D1
   await db.createJob(env.DB, planId, body.prompt, "summary", null, "", model, "planning");

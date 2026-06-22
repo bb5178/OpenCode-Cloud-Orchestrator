@@ -21,6 +21,8 @@
 import { spawn } from "node:child_process";
 import { hostname } from "node:os";
 
+const VERSION = "1.2.0";  // --format json result capture, hardened synthesis prompt
+
 // ── Config ──
 
 const args = process.argv.slice(2);
@@ -139,6 +141,7 @@ function executeTask(task) {
       cmdArgs.push("--model", MODEL);
     }
     cmdArgs.push("--dir", WORK_DIR);
+    cmdArgs.push("--format", "json");
     cmdArgs.push("--dangerously-skip-permissions");
     cmdArgs.push("--title", `OCO: ${task.id}`);
     cmdArgs.push(prompt);
@@ -177,17 +180,30 @@ function executeTask(task) {
   });
 }
 
+/**
+ * Extract text content from opencode --format json output.
+ * Each line is a JSON event: { type: "text", part: { text: "..." } }
+ * Concatenates ALL text parts to capture the full agent response,
+ * not just the first narration line.
+ */
 function extractResult(output) {
-  // opencode run output includes ANSI codes and formatting.
-  // Strip ANSI escape sequences.
-  const clean = output.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
-  if (!clean) return null;
+  const lines = output.split("\n").filter((l) => l.trim());
+  const textParts = [];
 
-  const lines = clean.split("\n").filter((l) => l.trim().length > 0);
-  if (lines.length === 0) return null;
+  for (const line of lines) {
+    try {
+      const event = JSON.parse(line);
+      if (event.type === "text" && event.part?.text) {
+        textParts.push(event.part.text.trim());
+      }
+    } catch {
+      // Not JSON — skip (shouldn't happen with --format json)
+    }
+  }
 
-  // Return the full output — D1 TEXT columns have no practical size limit
-  return lines.join("\n");
+  if (textParts.length === 0) return null;
+
+  return textParts.filter(Boolean).join("\n\n");
 }
 
 // ── Main Loop ──
@@ -233,7 +249,7 @@ async function processTask(task) {
 }
 
 async function mainLoop() {
-  logInfo(`${C.bold}OCO Runner started${C.reset}`);
+  logInfo(`${C.bold}OCO Runner v${VERSION} started${C.reset}`);
   if (!OCO_URL) {
     logErr("OCO_URL is not set. Export it before running:");
     logErr("  export OCO_URL=https://oco.yourdomain.com");

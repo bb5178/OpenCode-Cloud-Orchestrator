@@ -9,6 +9,7 @@ node_modules/
 run.sh
 run-pool.sh
 wrangler.local.jsonc
+mcp-server/start.sh
 
 # Lock files (let users generate their own)
 package-lock.json

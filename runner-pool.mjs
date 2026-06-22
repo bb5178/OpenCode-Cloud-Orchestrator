@@ -13,6 +13,8 @@
 import { spawn, execSync } from "node:child_process";
 import { hostname } from "node:os";
 
+const VERSION = "1.2.0";  // --format json result capture, hardened planning + synthesis prompts, 5min watchdog
+
 // ── Config ──
 
 const args = process.argv.slice(2);
@@ -27,7 +29,7 @@ const POLL_INTERVAL = 3000;
 const BASE_PORT = 14100;
 const SERVER_WARMUP_MS = 8000;
 const WATCHDOG_INTERVAL = 60000;    // check every 60 seconds
-const HUNG_THRESHOLD_MS = 120000;   // 2 minutes no activity = hung
+const HUNG_THRESHOLD_MS = 300000;   // 5 minutes no activity = hung (increased from 2min for slow MCP tools)
 const TASK_TIMEOUT_MS = parseInt(getArg("--timeout") || "300000", 10);  // 5 minutes default per task
 
 function getArg(name) {
@@ -143,6 +145,36 @@ function getIdleServer() {
   return servers.find((s) => s.status === "idle");
 }
 
+// ── Result Extraction ──
+
+/**
+ * Extract text content from opencode --format json output.
+ * Each line is a JSON event: { type: "text", part: { text: "..." } }
+ * Concatenates ALL text parts to capture the full agent response,
+ * not just the first narration line.
+ */
+function extractJsonResult(stdout) {
+  const lines = stdout.split("\n").filter((l) => l.trim());
+  const textParts = [];
+
+  for (const line of lines) {
+    try {
+      const event = JSON.parse(line);
+      if (event.type === "text" && event.part?.text) {
+        textParts.push(event.part.text.trim());
+      }
+    } catch {
+      // Not JSON — skip (shouldn't happen with --format json)
+    }
+  }
+
+  if (textParts.length === 0) return null;
+
+  // Return all text parts concatenated — the last one is typically the
+  // synthesized result, but we keep all for completeness
+  return textParts.filter(Boolean).join("\n\n");
+}
+
 // ── Task Execution ──
 
 // Track local failure history for prompt rewriting
@@ -229,6 +261,7 @@ async function executeTask(server, task) {
       const child = spawn("opencode", [
         "run",
         "--attach", `http://localhost:${server.port}`,
+        "--format", "json",
         "--dangerously-skip-permissions",
         "--title", `OCO: ${task.id}`,
         prompt,
@@ -254,8 +287,8 @@ async function executeTask(server, task) {
 
           child.kill("SIGTERM");
           // Give partial result if we have output
-          const partial = stdout.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
-          if (partial.length > 100) {
+          const partial = extractJsonResult(stdout);
+          if (partial && partial.length > 100) {
             resolve(partial + "\n\n[TIMEOUT: Task exceeded " + (TASK_TIMEOUT_MS / 1000) + "s limit. Partial result returned.]");
           } else {
             reject(new Error(`Task timeout after ${TASK_TIMEOUT_MS / 1000}s (attempt ${failureHistory[task.id].count})`));
@@ -277,9 +310,8 @@ async function executeTask(server, task) {
         if (settled) return;
         settled = true;
         if (code === 0) {
-          const clean = stdout.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, "").trim();
-          const lines = clean.split("\n").filter((l) => l.trim().length > 0);
-          resolve(lines.join("\n"));
+          const result = extractJsonResult(stdout);
+          resolve(result || "(completed with no text output)");
         } else {
           reject(new Error(`Exit ${code}: ${stderr.slice(-500)}`));
         }
@@ -433,7 +465,7 @@ function renderHeader() {
   const w = screenCols;
 
   // Title bar
-  const title = ` OCO Pool Runner `;
+  const title = ` OCO Pool Runner v${VERSION} `;
   const wdStr = watchdogKills > 0 ? `  WD: ${watchdogKills}` : "";
   const stats = ` ${now}  Up: ${uptime}  Done: ${totalCompleted}  Failed: ${totalFailed}${wdStr} `;
   const pad = w - title.length - stats.length;

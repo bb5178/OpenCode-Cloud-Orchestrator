@@ -118,7 +118,14 @@ export function buildSynthesisPrompt(originalPrompt: string, taskIds: string[]):
 
 "${originalPrompt}"
 
-You have received the results from all ${taskIds.length} tasks as context. Your job is to:
+You have received the results from all ${taskIds.length} tasks as context.
+
+CRITICAL RULES:
+- Do NOT use any tools. Do NOT search, fetch, read files, or browse the web. Everything you need is in the context below.
+- Do NOT narrate your process. Do NOT say "I'll start by..." or "Let me check...". Just produce the document.
+- If a task result is incomplete or missing, note the gap briefly and move on. Do NOT try to fill it yourself.
+
+Your job is to:
 
 1. READ all the task results provided in the context carefully
 2. SYNTHESIZE them into a single, well-structured, professional document
@@ -133,5 +140,5 @@ You have received the results from all ${taskIds.length} tasks as context. Your 
 4. REMOVE any meta-commentary about tasks, waves, or orchestration — the reader should see a polished document, not task outputs
 5. VERIFY that all key topics from the original request are covered
 
-Produce the final document now.`;
+Output ONLY the final document. Start writing immediately.`;
 }
